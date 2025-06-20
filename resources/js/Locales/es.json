@@ -1,0 +1,113 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "company": "Mi Empresa",
+    "applications": "Solicitudes",
+    "account": "Mi Cuenta"
+  },
+  "common": {
+    "yes": "Sí",
+    "no": "No",
+    "back": "Atrás",
+    "next": "Siguiente",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "loading": "Cargando..."
+  },
+  "application": {
+    "title": "Solicitud de Crédito",
+    "description": "Completa tu solicitud de financiación en 5 pasos sencillos",
+    "step": "Paso",
+    "of": "de"
+  },
+  "login": {
+    "title": "Bienvenido a Lemi Finance",
+    "subtitle": "Inicia sesión para continuar con tu solicitud",
+    "email": "Correo Electrónico",
+    "emailPlaceholder": "Introduce tu correo electrónico",
+    "password": "Contraseña",
+    "passwordPlaceholder": "Introduce tu contraseña",
+    "loginButton": "Iniciar Sesión"
+  },
+  "userInfo": {
+    "title": "Información Personal",
+    "subtitle": "Cuéntanos sobre ti",
+    "firstName": "Nombre",
+    "firstNamePlaceholder": "Introduce tu nombre",
+    "lastName": "Apellidos",
+    "lastNamePlaceholder": "Introduce tus apellidos",
+    "contactEmail": "Email de Contacto",
+    "contactEmailPlaceholder": "Introduce tu email de contacto",
+    "mobilePhone": "Teléfono Móvil",
+    "mobilePhonePlaceholder": "+34 600 000 000",
+    "officePhone": "Teléfono de Oficina",
+    "officePhonePlaceholder": "+34 900 000 000",
+    "whatsappPhone": "Teléfono WhatsApp",
+    "whatsappPhonePlaceholder": "+34 600 000 000",
+    "isLegalRepresentative": "¿Eres el representante legal de la empresa?"
+  },
+  "companyInfo": {
+    "title": "Información de la Empresa",
+    "subtitle": "Cuéntanos sobre tu negocio",
+    "companyName": "Nombre de la Empresa / Razón Social",
+    "companyNamePlaceholder": "Introduce el nombre de tu empresa",
+    "nif": "NIF (Número de Identificación Fiscal)",
+    "nifPlaceholder": "Introduce tu NIF",
+    "companyType": "Tipo de Empresa",
+    "selectCompanyType": "Selecciona el tipo de empresa",
+    "isStartup": "¿Es una Startup?",
+    "yearStarted": "Año de Inicio del Negocio",
+    "yearStartedPlaceholder": "2020",
+    "hadProfitsLastYear": "¿Tuvo beneficios el año pasado?",
+    "hasUnpaidDebts": "¿Alguna deuda impagada >90 días?",
+    "numberOfEmployees": "Número de Empleados",
+    "numberOfEmployeesPlaceholder": "10",
+    "description": "Descripción Breve de la Empresa",
+    "descriptionPlaceholder": "Describe brevemente la actividad principal de tu empresa..."
+  },
+  "creditApplication": {
+    "title": "Solicitud de Crédito",
+    "subtitle": "Detalles sobre tus necesidades de financiación",
+    "financingTypes": "Tipo de Financiación",
+    "types": {
+      "creditLine": "Línea de Crédito",
+      "loan": "Préstamo",
+      "importExport": "Importación/Exportación",
+      "confirming": "Confirming",
+      "invoiceDiscounting": "Descuento de Facturas",
+      "leasing": "Leasing",
+      "other": "Otro"
+    },
+    "requestedAmount": "Importe Solicitado",
+    "minAmount": "Mín. €50,000",
+    "termMonths": "Plazo en Meses",
+    "months": "meses",
+    "useOfFunds": "Destino de los Fondos",
+    "useOfFundsPlaceholder": "Describe cómo planeas usar los fondos...",
+    "uploadDocuments": "Subir Documentos",
+    "maxFiles": "Máx. 15 archivos PDF",
+    "dragDropFiles": "Arrastra y suelta tus archivos PDF aquí",
+    "selectFiles": "Seleccionar Archivos",
+    "maxFilesExceeded": "Máximo 15 archivos permitidos",
+    "partnerGuarantee": "¿Garantía de Socio?",
+    "fundsNeededDate": "¿Cuándo necesitas los fondos?",
+    "submitApplication": "Enviar Solicitud"
+  },
+  "final": {
+    "title": "¡Solicitud Enviada Exitosamente!",
+    "message": "Ahora debes completar la información de tu empresa y socios para enviar solicitudes a los bancos.",
+    "nextSteps": "Próximos Pasos",
+    "step1": "Revisaremos tu solicitud en 24-48 horas",
+    "step2": "Nuestro equipo te contactará para completar documentación adicional",
+    "step3": "Enviaremos tu solicitud a nuestros bancos asociados",
+    "goToDashboard": "Ir al Dashboard",
+    "newApplication": "Nueva Solicitud",
+    "applicationSummary": "Resumen de la Solicitud",
+    "companyName": "Nombre de la Empresa",
+    "requestedAmount": "Importe Solicitado",
+    "financingTypes": "Tipos de Financiación",
+    "typesSelected": "tipos seleccionados",
+    "term": "Plazo",
+    "months": "meses"
+  }
+}

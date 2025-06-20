@@ -44,7 +44,7 @@ const uploadFile = async () => {
   if (!model.value) return;
 
   isLoading.value = true;
-
+  console.log(isLoading.value);
   const formData = new FormData();
   formData.append(props.name, model.value); // Use the `name` prop as the key
 
@@ -109,7 +109,8 @@ watch(model, (newFile) => {
       :disabled="!model || isLoading"
       @click="uploadFile"
     >
-      <!-- {{ isLoading ? "Uploading..." : "Upload File" }} -->
+      <!-- {{ isLoading }} -->
+      {{ isLoading ? "Uploading..." : "Upload File" }}
     </button>
   </div>
 </template>

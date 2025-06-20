@@ -1,0 +1,113 @@
+{
+  "nav": {
+    "dashboard": "Dashboard",
+    "company": "My Company",
+    "applications": "Applications",
+    "account": "My Account"
+  },
+  "common": {
+    "yes": "Yes",
+    "no": "No",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "cancel": "Cancel",
+    "loading": "Loading..."
+  },
+  "application": {
+    "title": "Credit Application",
+    "description": "Complete your financing application in 5 simple steps",
+    "step": "Step",
+    "of": "of"
+  },
+  "login": {
+    "title": "Welcome to Lemi Finance",
+    "subtitle": "Sign in to continue with your application",
+    "email": "Email Address",
+    "emailPlaceholder": "Enter your email address",
+    "password": "Password",
+    "passwordPlaceholder": "Enter your password",
+    "loginButton": "Sign In"
+  },
+  "userInfo": {
+    "title": "Personal Information",
+    "subtitle": "Tell us about yourself",
+    "firstName": "First Name",
+    "firstNamePlaceholder": "Enter your first name",
+    "lastName": "Last Name",
+    "lastNamePlaceholder": "Enter your last name",
+    "contactEmail": "Contact Email",
+    "contactEmailPlaceholder": "Enter your contact email",
+    "mobilePhone": "Mobile Phone",
+    "mobilePhonePlaceholder": "+34 600 000 000",
+    "officePhone": "Office Phone",
+    "officePhonePlaceholder": "+34 900 000 000",
+    "whatsappPhone": "WhatsApp Phone",
+    "whatsappPhonePlaceholder": "+34 600 000 000",
+    "isLegalRepresentative": "Are you the legal representative of the company?"
+  },
+  "companyInfo": {
+    "title": "Company Information",
+    "subtitle": "Tell us about your business",
+    "companyName": "Company Name / Business Name",
+    "companyNamePlaceholder": "Enter your company name",
+    "nif": "NIF (Tax ID)",
+    "nifPlaceholder": "Enter your NIF",
+    "companyType": "Company Type",
+    "selectCompanyType": "Select company type",
+    "isStartup": "Is it a Startup?",
+    "yearStarted": "Year Business Started",
+    "yearStartedPlaceholder": "2020",
+    "hadProfitsLastYear": "Did it show profits last year?",
+    "hasUnpaidDebts": "Any unpaid debts >90 days?",
+    "numberOfEmployees": "Number of Employees",
+    "numberOfEmployeesPlaceholder": "10",
+    "description": "Short Company Description",
+    "descriptionPlaceholder": "Briefly describe your company's main activity..."
+  },
+  "creditApplication": {
+    "title": "Credit Application",
+    "subtitle": "Details about your financing needs",
+    "financingTypes": "Type of Financing",
+    "types": {
+      "creditLine": "Credit Line",
+      "loan": "Loan",
+      "importExport": "Import/Export",
+      "confirming": "Confirming",
+      "invoiceDiscounting": "Invoice Discounting",
+      "leasing": "Leasing",
+      "other": "Other"
+    },
+    "requestedAmount": "Requested Amount",
+    "minAmount": "Min. €50,000",
+    "termMonths": "Term in Months",
+    "months": "months",
+    "useOfFunds": "Use of Funds",
+    "useOfFundsPlaceholder": "Describe how you plan to use the funds...",
+    "uploadDocuments": "Upload Documents",
+    "maxFiles": "Max 15 PDF files",
+    "dragDropFiles": "Drag and drop your PDF files here",
+    "selectFiles": "Select Files",
+    "maxFilesExceeded": "Maximum 15 files allowed",
+    "partnerGuarantee": "Partner Guarantee?",
+    "fundsNeededDate": "When do you need the funds?",
+    "submitApplication": "Submit Application"
+  },
+  "final": {
+    "title": "Application Submitted Successfully!",
+    "message": "Now you must complete your company and partner information to send requests to the banks.",
+    "nextSteps": "Next Steps",
+    "step1": "We will review your application within 24-48 hours",
+    "step2": "Our team will contact you to complete additional documentation",
+    "step3": "We will submit your application to our partner banks",
+    "goToDashboard": "Go to Dashboard",
+    "newApplication": "New Application",
+    "applicationSummary": "Application Summary",
+    "companyName": "Company Name",
+    "requestedAmount": "Requested Amount",
+    "financingTypes": "Financing Types",
+    "typesSelected": "types selected",
+    "term": "Term",
+    "months": "months"
+  }
+}

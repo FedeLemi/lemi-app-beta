@@ -18,11 +18,14 @@ use Inertia\Inertia;
 //         'phpVersion' => PHP_VERSION,
 //     ]);
 // })->name('home');
+Route::get('/application', function () {
+    return Inertia::render('Application/Index');
+})->name('application');
 
 // Dashboard Route
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Application.Index');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // Route::get('/dashboard', function () {
 //     return Inertia::render('Dashboard');
