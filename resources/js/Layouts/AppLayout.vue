@@ -182,7 +182,7 @@ const { t, locale } = useI18n();
 // Ensure useDark and useToggle are called at the top level
 const isDark = useDark();
 const toggleDarkMode = useToggle(isDark);
-alert(locale.value);
+// alert(locale.value);
 const currentLocale = ref(locale.value);
 
 const changeLocale = () => {
