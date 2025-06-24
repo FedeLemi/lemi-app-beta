@@ -42,6 +42,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 // Ruta del dashboard (protegida)
-// Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->name('dashboard');
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
