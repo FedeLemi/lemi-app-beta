@@ -18,7 +18,9 @@ import { Link } from "@inertiajs/vue3";
     >
       <slot />
       <div class="items-center m-2">
-        <Link href="/" class="text-white underline"> Registrate </Link>
+        <Link href="/register" class="flex items-center">
+          <span>{{ $t("login.signUp") }}</span>
+        </Link>
       </div>
     </div>
   </div>
