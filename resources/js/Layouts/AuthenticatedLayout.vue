@@ -1,132 +1,154 @@
-<script setup>
-import { ref } from "vue";
-import ApplicationLogo from "@/Components/ApplicationLogo.vue";
-import Dropdown from "@/Components/Dropdown.vue";
-import DropdownLink from "@/Components/DropdownLink.vue";
-// import SidebarLink from "@/Components/SidebarLink.vue"; // You may need to create this component
-import { Link } from "@inertiajs/vue3";
-
-const showingSidebar = ref(true);
-</script>
-
 <template>
-  <div class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white dark: bg-violet-900 text-white-50">
-      <div class="h-16 flex items-center justify-center">
-        <a
-          href="http://lemi-app.test/dashboard"
-          class="flex items-center space-x-2"
-        >
-          <svg
-            width="50"
-            height="49"
-            viewBox="0 0 50 49"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M39.6248 40.2042L10.8546 39.5632C10.0858 39.3345 10.4736 39.4323 10.8546 39.5632C11.2356 39.694 11.7386 39.5804 10.8546 39.5632L4.84783 16.1745C4.78237 15.9196 4.58736 14.313 4.35749 14.2652C4.12761 14.2175 3.84437 14.9127 3.67464 15.115L2.2075 17.8276C1.9485 18.1438 1.87369 18.5168 1.97176 18.8986L5.40419 32.2636C5.89748 34.1843 6.52831 36.4337 6.99782 38.4687C7.46733 40.5037 7.91355 42.0343 8.34628 43.7192C13.7705 43.7407 16.9647 43.6357 21.1047 43.673L35.306 43.2775C35.7152 43.2799 35.0582 43.5738 35.306 43.2775L39.6248 40.2042C39.5344 40.2261 40.1057 40.0878 39.6248 40.2042Z"
-              fill="url(#paint0_linear_15_2431)"
-            ></path>
-            <path
-              d="M13.5632 35.8717C13.9004 37.1847 13.364 35.0963 13.6858 36.3492C16.0644 36.5341 23.2423 36.2553 23.9202 36.4077C19.2384 35.774 24.6534 36.2586 23.9202 36.4077L36.2305 36.6271L41.618 36.6467C42.0298 36.6464 42.4131 36.4715 42.6638 36.1785L46.7663 31.4612L50.6053 27.0551C50.8685 26.7429 50.9699 26.338 50.8738 25.9637L47.7952 14.0448C45.8577 6.50117 38.7102 1.22871 30.4105 1.2182L16.6546 1.18745C16.2428 1.18772 15.8595 1.36264 15.6088 1.6556L11.5063 6.37291L7.66726 10.779C7.40407 11.0912 7.30265 11.4961 7.39879 11.8704L8.61966 16.6239L10.988 25.8453L13.5632 35.8717ZM18.3801 30.9957L14.9915 17.8698C14.8606 17.3599 15.2641 16.8738 15.8104 16.8764L30.255 16.9981C30.8537 17.0053 31.3817 17.4019 31.5247 17.9586L34.9123 31.0847C35.043 31.5937 34.6407 32.0805 34.0941 32.0769L19.6488 31.9564C19.0511 31.9489 18.5231 31.5524 18.3801 30.9957ZM13.1047 6.40898L39.0603 6.63417C39.658 6.64164 40.186 7.03821 40.329 7.59491L46.4268 31.2056C46.5575 31.7146 46.155 32.2005 45.6086 32.1978L41.7667 32.1642C41.3204 32.1535 40.9224 31.8614 40.8162 31.4479L39.1198 24.8429C37.1292 17.1599 29.994 11.7364 21.7116 11.6619L14.1281 11.5875C13.6819 11.5769 13.2839 11.2847 13.1775 10.8703L12.2865 7.40118C12.1557 6.89223 12.558 6.40538 13.1047 6.40898Z"
-              fill="url(#paint1_linear_15_2431)"
-            ></path>
-            <defs>
-              <linearGradient
-                id="paint0_linear_15_2431"
-                x1="19.9275"
-                y1="5.35457"
-                x2="17.7925"
-                y2="57.211"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stop-color="#04D5C9"></stop>
-                <stop offset="0.524476" stop-color="#6A44C4"></stop>
-                <stop offset="1" stop-color="#6A44C4"></stop>
-              </linearGradient>
-              <linearGradient
-                id="paint1_linear_15_2431"
-                x1="28.7808"
-                y1="-7.61088"
-                x2="27.5539"
-                y2="51.6206"
-                gradientUnits="userSpaceOnUse"
-              >
-                <stop stop-color="#04D5C9"></stop>
-                <stop offset="0.524476" stop-color="#6A44C4"></stop>
-                <stop offset="1" stop-color="#6A44C4"></stop>
-              </linearGradient>
-            </defs>
-          </svg>
-          <h3 class="font-poppins">LEMI Finance</h3>
-        </a>
-      </div>
+  <div class="min-h-screen" :class="isDark ? 'dark bg-gray-900' : 'bg-gray-50'">
+    <div class="flex">
+      <!-- Sidebar -->
+      <div
+        class="w-64 min-h-screen"
+        :class="isDark ? 'bg-purple-900' : 'bg-purple-100'"
+      >
+        <div class="p-6">
+          <div class="flex items-center space-x-3 mb-8">
+            <div
+              class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center"
+            >
+              <span class="text-white font-bold text-sm">L</span>
+            </div>
+            <span
+              class="text-xl font-bold"
+              :class="isDark ? 'text-white' : 'text-purple-900'"
+            >
+              LEMI Finance
+            </span>
+          </div>
 
-      <nav class="mt-10">
-        <ul class="p-4 space-y-4 dark: text-white-50">
-          <li class="bg-violet-500 p-4 rounded-lg">
+          <nav class="space-y-2">
             <Link
               :href="route('dashboard')"
-              :active="route().current('dashboard')"
+              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+              :class="
+                isDark
+                  ? 'text-purple-200 hover:bg-purple-800'
+                  : 'text-purple-700 hover:bg-purple-200'
+              "
             >
-              Dashboard
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="3" y="3" width="7" height="7"></rect>
+                <rect x="14" y="3" width="7" height="7"></rect>
+                <rect x="14" y="14" width="7" height="7"></rect>
+                <rect x="3" y="14" width="7" height="7"></rect>
+              </svg>
+              <span>Dashboard</span>
             </Link>
-          </li>
-          <li class="bg-violet-500 p-4 rounded-lg">
+
             <Link
               :href="route('dashboard')"
-              :active="route().current('dashboard')"
+              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors font-medium"
+              :class="
+                isDark ? 'bg-purple-800 text-white' : 'bg-purple-600 text-white'
+              "
             >
-              Solicitudes
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+              </svg>
+              <span>Solicitudes</span>
             </Link>
-          </li>
-          <li class="bg-violet-500 p-4 rounded-lg">
+
             <Link
               :href="route('dashboard')"
-              :active="route().current('dashboard')"
+              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+              :class="
+                isDark
+                  ? 'text-purple-200 hover:bg-purple-800'
+                  : 'text-purple-700 hover:bg-purple-200'
+              "
             >
-              Mi Empresa
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+                <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+                <line x1="6" y1="6" x2="6.01" y2="6"></line>
+                <line x1="6" y1="18" x2="6.01" y2="18"></line>
+              </svg>
+              <span>Mi Empresa</span>
             </Link>
-          </li>
-          <li class="bg-violet-500 p-4 rounded-lg">
+
             <Link
               :href="route('dashboard')"
-              :active="route().current('dashboard')"
+              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+              :class="
+                isDark
+                  ? 'text-purple-200 hover:bg-purple-800'
+                  : 'text-purple-700 hover:bg-purple-200'
+              "
             >
-              Mi cuenta
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              <span>Mi cuenta</span>
             </Link>
-          </li>
-          <!-- Add more sidebar links here -->
-        </ul>
-      </nav>
-      <div class="absolute dark:border-gray-700">
-        <div class="p-4">
-          <!-- Settings Dropdown -->
+          </nav>
+        </div>
+
+        <!-- User Profile Dropdown -->
+        <div class="absolute bottom-6 left-6">
           <Dropdown align="left">
             <template #trigger>
-              <span class="inline-flex rounded-md">
-                <button
-                  type="button"
-                  class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 dark:text-gray-400 bg-white dark:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-300 focus:outline-none transition ease-in-out duration-150"
-                >
-                  {{ $page.props.auth.user.name }}
-
-                  <svg
-                    class="ms-2 -me-0.5 h-4 w-4"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
+              <div class="flex items-center space-x-3 cursor-pointer">
+                <img
+                  src="/placeholder.svg?height=40&width=40"
+                  alt="User"
+                  class="w-10 h-10 rounded-full"
+                />
+                <div>
+                  <p
+                    class="text-sm font-medium"
+                    :class="isDark ? 'text-white' : 'text-purple-900'"
                   >
-                    <path
-                      fill-rule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </button>
-              </span>
+                    {{ $page.props.auth.user.name }}
+                  </p>
+                </div>
+              </div>
             </template>
 
             <template #content>
@@ -140,34 +162,115 @@ const showingSidebar = ref(true);
           </Dropdown>
         </div>
       </div>
-    </aside>
 
-    <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
-      <!-- Page Heading -->
-      <header class="bg-white dark:bg-gray-800 shadow" v-if="$slots.header">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <slot name="header" />
-        </div>
-      </header>
+      <!-- Main Content -->
+      <div class="flex-1">
+        <header
+          class="border-b"
+          :class="
+            isDark ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'
+          "
+        >
+          <div class="px-6 py-4 flex items-center justify-between">
+            <div>
+              <h1
+                class="text-2xl font-bold"
+                :class="isDark ? 'text-white' : 'text-gray-900'"
+              >
+                <slot name="header" />
+              </h1>
+            </div>
 
-      <!-- Page Content -->
-      <main class="flex-1 bg-custom-gradient">
-        <slot />
-      </main>
+            <div class="flex items-center space-x-4">
+              <button
+                @click="toggleDarkMode"
+                class="p-2 rounded-lg transition-colors"
+                :class="
+                  isDark
+                    ? 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
+                "
+              >
+                <svg
+                  v-if="isDark"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg
+                  v-else
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                >
+                  <path
+                    d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"
+                  ></path>
+                </svg>
+              </button>
+
+              <select
+                v-model="currentLocale"
+                @change="changeLocale"
+                class="px-3 py-2 rounded-lg border text-sm"
+                :class="
+                  isDark
+                    ? 'bg-gray-700 border-gray-600 text-white'
+                    : 'bg-white border-gray-300 text-gray-900'
+                "
+              >
+                <option value="es">Español</option>
+                <option value="en">English</option>
+              </select>
+            </div>
+          </div>
+        </header>
+
+        <main class="p-6">
+          <slot />
+        </main>
+      </div>
     </div>
   </div>
 </template>
 
-<style>
-/* Ensure sidebar and main content area take full height */
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
+<script setup>
+import { ref, computed } from "vue";
+import { Link } from "@inertiajs/vue3";
+import { useI18n } from "vue-i18n";
+import { useDark, useToggle } from "@vueuse/core";
+import Dropdown from "@/Components/Dropdown.vue";
+import DropdownLink from "@/Components/DropdownLink.vue";
 
-.flex {
-  display: flex;
-}
-</style>
+const { t, locale } = useI18n();
+
+const isDark = useDark();
+const toggleDarkMode = useToggle(isDark);
+const currentLocale = ref(locale.value);
+
+const changeLocale = () => {
+  locale.value = currentLocale.value;
+};
+</script>

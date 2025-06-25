@@ -4,7 +4,7 @@ import es from '@/Locales/es.json'
 
 export default createI18n({
   legacy: false,  // Required for Composition API
-  locale: 'en',
+  locale: 'es',
   fallbackLocale: 'en',
   messages: { en, es }
 })

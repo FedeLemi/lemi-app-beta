@@ -6,12 +6,20 @@ import TextInput from "@/Components/TextInput.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import NumericInput from "@/Components/NumericInput.vue";
 import Select from "@/Components/Select.vue";
-import MoneyInput from "@/Components/MoneyInput.vue";
-import DatePicker from "@/Components/DatePicker.vue";
-import DragAndDropFileInput from "@/Components/DragAndDropFileInput.vue";
-import MultiSelect from "@/Components/MultiSelect.vue";
 import { ref } from "vue";
 import axios from "axios";
+import { useDark } from "@vueuse/core";
+import {
+  FileTextIcon,
+  XIcon,
+  UploadIcon,
+  CreditCardIcon,
+  FileIcon,
+  BriefcaseIcon,
+  BuildingIcon,
+} from "lucide-vue-next";
+
+const isDark = useDark();
 
 // Track the current step
 const currentStep = ref(1);
@@ -115,31 +123,62 @@ const optionsActivities = ref([
   { label: "Otras actividades", value: "Otras actividades" },
 ]);
 
-// Options for the MultiSelect component
-const multiSelectOptions = ref([
-  { id: 1, name: "BBVA" },
-  { id: 2, name: "Caixa Bank" },
-  { id: 3, name: "Banco Santander" },
-  { id: 4, name: "Banco Sabadell" },
-  { id: 5, name: "Abanca" },
-  { id: 6, name: "Bankinter" },
-  { id: 7, name: "Kutxabank" },
-  { id: 8, name: "Cajamar" },
-  { id: 9, name: "Ibercaja" },
-  { id: 10, name: "Novicap" },
-  { id: 11, name: "Kintai" },
-]);
+// File handling
+const fileFields = ref({
+  corporate_taxes: [],
+  balance_sheet_current_year: [],
+  bank_debt_summary: [],
+  cirbe: [],
+  vat_summary: [],
+  sociedades_y_auditorias: [],
+  balance_resultados_provisional: [],
+  liquidaciones_iva: [],
+  liquidaciones_irpf: [],
+  modelo_390: [],
+  modelo_347: [],
+  modelo_349: [],
+});
 
-// Selected values
-const MultiselectedValues = ref([]);
+const fileInputRefs = ref({});
 
-// // Set values programmatically
-// const setProgrammaticValues = () => {
-//   // Setting values with ids 1, 2, and 3
-//   MultiselectedValues.value = options.value.filter((option) =>
-//     [1, 2, 3].includes(option.id)
-//   );
-// };
+const handleFileDrop = (event, fieldName) => {
+  event.preventDefault();
+  const files = Array.from(event.dataTransfer.files);
+  addFiles(files, fieldName);
+};
+
+const handleFileSelect = (event, fieldName) => {
+  const files = Array.from(event.target.files);
+  addFiles(files, fieldName);
+};
+
+const addFiles = (files, fieldName) => {
+  const pdfFiles = files.filter((file) => file.type === "application/pdf");
+  const currentFiles = fileFields.value[fieldName];
+
+  if (currentFiles.length + pdfFiles.length <= 15) {
+    fileFields.value[fieldName] = [...currentFiles, ...pdfFiles];
+  } else {
+    alert("Máximo 15 archivos permitidos");
+  }
+};
+
+const removeFile = (fieldName, index) => {
+  fileFields.value[fieldName].splice(index, 1);
+};
+
+const setFileInputRef = (fieldName, el) => {
+  if (el) {
+    fileInputRefs.value[fieldName] = el;
+  }
+};
+
+const triggerFileInput = (fieldName) => {
+  if (fileInputRefs.value[fieldName]) {
+    fileInputRefs.value[fieldName].click();
+  }
+};
+
 const debounce = (func, delay) => {
   let timer;
   return (...args) => {
@@ -179,18 +218,26 @@ const handleInput = () => {
   <Head title="Dashboard" />
 
   <AuthenticatedLayout>
-    <div class="mt-20 max-w-7xl mx-auto p-8 rounded-lg dark: bg-violet-900">
+    <div
+      class="mt-20 max-w-7xl mx-auto p-8 rounded-lg"
+      :class="isDark ? 'bg-gray-900' : 'bg-violet-900'"
+    >
       <div class="max-w-7xl mx-auto">
-        <h2 class="font-semibold text-xl text-gray-800 dark: text-white-50">
+        <h2
+          class="font-semibold text-xl"
+          :class="isDark ? 'text-gray-200' : 'text-white'"
+        >
           Mi empresa
         </h2>
-        <p class="dark: text-white-50 ext-sm">
+        <p :class="isDark ? 'text-gray-300' : 'text-white'">
           Completa tu información para tenerla disponible al momento de hacer
           una nueva solicitud
         </p>
       </div>
+
+      <!-- Step Navigation -->
       <div
-        class="max-w-7xl mx-auto flex flex-wrap items-center justify-between m-12 text-center md:flex-nowrap md:space-x-4 space-y-6 md:space-y-0"
+        class="max-w-7xl mx-auto flex flex-wrap justify-between my-12 text-center md:flex-nowrap md:space-x-4 space-y-6 md:space-y-0"
       >
         <!-- Step 1 -->
         <div
@@ -198,30 +245,33 @@ const handleInput = () => {
           @click="goToStep(1)"
         >
           <div
-            :class="{
-              'px-4 py-4 flex items-center justify-center font-bold text-center w-full rounded-md min-h-20': true,
-              'bg-violet-500 text-white-50': currentStep === 1,
-              'bg-violet-700 text-white-50': currentStep !== 1,
-            }"
-            class="rounded"
+            class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            :class="
+              currentStep === 1
+                ? isDark
+                  ? 'bg-purple-600'
+                  : 'bg-purple-500'
+                : isDark
+                ? 'bg-gray-700'
+                : 'bg-violet-700'
+            "
           >
-            Información económica/financiera
+            <CreditCardIcon class="w-8 h-8 text-white" />
           </div>
-          <!-- <h3 class="mt-4 text-lg md:text-xl font-semibold dark:text-white-50">
-          Registrate
-        </h3>
-        <p class="dark:text-white-50 text-sm md:text-base">
-          Completa los datos de tu empresa
-        </p> -->
-        </div>
-
-        <!-- Connector Line (hidden on small screens) -->
-        <div
-          class="hidden md:block flex-1 border-dashed border-t-0 dark: border-white-50 relative"
-        >
           <div
-            class="absolute inset-y-1/2 w-full border-dashed border-t-2 dark: border-white-50"
-          ></div>
+            class="px-4 py-2 rounded-md font-medium"
+            :class="
+              currentStep === 1
+                ? isDark
+                  ? 'text-purple-300'
+                  : 'text-purple-100'
+                : isDark
+                ? 'text-gray-300'
+                : 'text-white'
+            "
+          >
+            Información económica
+          </div>
         </div>
 
         <!-- Step 2 -->
@@ -230,30 +280,33 @@ const handleInput = () => {
           @click="goToStep(2)"
         >
           <div
-            :class="{
-              'px-4 py-4 flex items-center justify-center font-bold text-center w-full rounded-md min-h-20 max-h-20': true,
-              'bg-violet-500 text-white-50': currentStep === 2,
-              'bg-violet-700 text-white-50': currentStep !== 2,
-            }"
-            class="rounded"
+            class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            :class="
+              currentStep === 2
+                ? isDark
+                  ? 'bg-purple-600'
+                  : 'bg-purple-500'
+                : isDark
+                ? 'bg-gray-700'
+                : 'bg-violet-700'
+            "
+          >
+            <FileIcon class="w-8 h-8 text-white" />
+          </div>
+          <div
+            class="px-4 py-2 rounded-md font-medium"
+            :class="
+              currentStep === 2
+                ? isDark
+                  ? 'text-purple-300'
+                  : 'text-purple-100'
+                : isDark
+                ? 'text-gray-300'
+                : 'text-white'
+            "
           >
             Información legal
           </div>
-          <!-- <h3 class="mt-4 text-lg md:text-xl font-semibold dark:text-white-50">
-          Sube tus documentos
-        </h3>
-        <p class="dark:text-white-50 text-sm md:text-base">
-          ¡Solo debes hacerlo una vez!
-        </p> -->
-        </div>
-
-        <!-- Connector Line (hidden on small screens) -->
-        <div
-          class="hidden md:block flex-1 border-dashed border-t-0 dark: border-white-50 relative"
-        >
-          <div
-            class="absolute inset-y-1/2 w-full border-dashed border-t-2 dark: border-white-50"
-          ></div>
         </div>
 
         <!-- Step 3 -->
@@ -262,320 +315,1602 @@ const handleInput = () => {
           @click="goToStep(3)"
         >
           <div
-            :class="{
-              'px-4 py-4 flex items-center justify-center font-bold text-center w-full rounded-md min-h-20': true,
-              'bg-violet-500 text-white-50': currentStep === 3,
-              'bg-violet-700 text-white-50': currentStep !== 3,
-            }"
-            class="rounded"
+            class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            :class="
+              currentStep === 3
+                ? isDark
+                  ? 'bg-purple-600'
+                  : 'bg-purple-500'
+                : isDark
+                ? 'bg-gray-700'
+                : 'bg-violet-700'
+            "
+          >
+            <BuildingIcon class="w-8 h-8 text-white" />
+          </div>
+          <div
+            class="px-4 py-2 rounded-md font-medium"
+            :class="
+              currentStep === 3
+                ? isDark
+                  ? 'text-purple-300'
+                  : 'text-purple-100'
+                : isDark
+                ? 'text-gray-300'
+                : 'text-white'
+            "
           >
             Información fiscal
           </div>
-          <!-- <h3 class="mt-4 text-lg md:text-xl font-semibold dark:text-white-50">
-          Solicita tu préstamo
-        </h3>
-        <p class="dark:text-white-50 text-sm md:text-base">
-          Elige la mejor opción
-        </p> -->
         </div>
       </div>
 
       <div class="py-12">
         <div class="max-w-7xl mx-auto">
           <div
-            class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg"
+            class="rounded-lg p-6"
+            :class="isDark ? 'bg-gray-800' : 'bg-white'"
           >
-            <div class="relative">
-              <!-- Form Content -->
-              <div class="mt-10">
-                <div v-if="currentStep === 1">
-                  <!-- Step 1 Form -->
-                  <form>
-                    <!-- Form content for step 1 goes here -->
-                    <div class="max-w-7xl mx-auto columns-2">
-                      <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg space-y-5 mr-20"
+            <!-- Step 1 Form -->
+            <div v-if="currentStep === 1" class="space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                  <!-- Activity -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Actividad de la empresa
+                    </label>
+                    <Select
+                      v-model="selectedValue"
+                      :options="optionsActivities"
+                      :class="[
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
+                          : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                      ]"
+                      class="w-full px-4 py-3 rounded-lg border transition-colors"
+                    />
+                  </div>
+
+                  <!-- Employees -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Empleados
+                    </label>
+                    <NumericInput
+                      id="employeeCount"
+                      :class="[
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
+                          : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                      ]"
+                      class="w-full px-4 py-3 rounded-lg border transition-colors"
+                      required
+                      @blur="handleBlur"
+                      @input="handleInput"
+                    />
+                  </div>
+
+                  <!-- Business Explanation -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Explicación del negocio
+                    </label>
+                    <TextAreaInput
+                      :class="[
+                        isDark
+                          ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                          : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
+                      ]"
+                      class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <!-- Right Column - File Uploads -->
+                <div class="space-y-6">
+                  <!-- Corporate Taxes -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Impuestos de sociedades de los últimos dos años
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'corporate_taxes')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('corporate_taxes')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
                       >
-                        <div
-                          class="text-gray-900 items-center dark:text-gray-100"
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('corporate_taxes', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'corporate_taxes')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.corporate_taxes.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.corporate_taxes"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('corporate_taxes', index)"
+                          class="text-red-500 hover:text-red-700"
                         >
-                          <InputLabel
-                            for="company-name"
-                            value="Actividad de la empresa"
-                          />
-                          <Select
-                            v-model="selectedValue"
-                            :options="optionsActivities"
-                            @blur="handleBlur"
-                            @input="handleInput"
-                          />
-                        </div>
-
-                        <div class="text-gray-900 dark:text-gray-100">
-                          <InputLabel for="company-name" value="Empleados" />
-                          <NumericInput
-                            id="employeeCount"
-                            class="mt-1 block w-full"
-                            required
-                            autofocus
-                            @blur="handleBlur"
-                            @input="handleInput"
-                          />
-                        </div>
-
-                        <div class="text-gray-900 dark:text-gray-100">
-                          <InputLabel
-                            for="company-name"
-                            value="Explicacion del negocio"
-                          />
-                          <TextAreaInput
-                            id="company-name"
-                            type="company-name"
-                            class="mt-1 block w-full"
-                            required
-                            autofocus
-                            @blur="handleBlur"
-                            @input="handleInput"
-                          />
-                        </div>
-                      </div>
-                      <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg ml-20"
-                      >
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Impuestos de sociedades de los últimos dos años"
-                          />
-                          <DragAndDropFileInput name="corporate_taxes" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Balance y cuenta de resultados del ejercicio en curso"
-                          />
-                          <DragAndDropFileInput
-                            name="balance_sheet_current_year"
-                          />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Pool bancario (relación de deudas bancarias de la empresa)"
-                          />
-                          <DragAndDropFileInput name="bank_debt_summary" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel for="company-name" value="CIRBE" />
-                          <DragAndDropFileInput name="cirbe" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Resumen de IVAs del último año e IVAs del año en curso"
-                          />
-                          <DragAndDropFileInput name="vat_summary" />
-                        </div>
+                          <XIcon class="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-                    <!-- Add more fields as needed -->
-                  </form>
+                  </div>
+
+                  <!-- Balance Sheet -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Balance y cuenta de resultados del ejercicio en curso
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'balance_sheet_current_year')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('balance_sheet_current_year')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef('balance_sheet_current_year', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'balance_sheet_current_year')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.balance_sheet_current_year.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.balance_sheet_current_year"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="
+                            removeFile('balance_sheet_current_year', index)
+                          "
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Bank Debt Summary -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Pool bancario (relación de deudas bancarias de la empresa)
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'bank_debt_summary')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('bank_debt_summary')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('bank_debt_summary', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'bank_debt_summary')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.bank_debt_summary.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.bank_debt_summary"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('bank_debt_summary', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- CIRBE -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      CIRBE
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'cirbe')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('cirbe')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('cirbe', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'cirbe')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.cirbe.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.cirbe"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('cirbe', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- VAT Summary -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Resumen de IVAs del último año e IVAs del año en curso
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'vat_summary')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('vat_summary')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('vat_summary', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'vat_summary')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.vat_summary.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.vat_summary"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('vat_summary', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2 Form -->
+            <div v-if="currentStep === 2" class="space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                  <!-- CIF -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      CIF de la empresa
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'sociedades_y_auditorias')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('sociedades_y_auditorias')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) => setFileInputRef('sociedades_y_auditorias', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'sociedades_y_auditorias')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.sociedades_y_auditorias.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.sociedades_y_auditorias"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('sociedades_y_auditorias', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Writings -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Escrituras de constitución y apoderamiento
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'balance_resultados_provisional')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="
+                        triggerFileInput('balance_resultados_provisional')
+                      "
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef(
+                              'balance_resultados_provisional',
+                              el
+                            )
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect(
+                            $event,
+                            'balance_resultados_provisional'
+                          )
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="
+                        fileFields.balance_resultados_provisional.length > 0
+                      "
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.balance_resultados_provisional"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="
+                            removeFile('balance_resultados_provisional', index)
+                          "
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Ownership Certificate -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Acta de titularidad real
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'liquidaciones_iva')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('liquidaciones_iva')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('liquidaciones_iva', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'liquidaciones_iva')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.liquidaciones_iva.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.liquidaciones_iva"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('liquidaciones_iva', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div v-if="currentStep === 2">
-                  <!-- Step 2 Form -->
-                  <form>
-                    <div class="max-w-7xl mx-auto columns-2">
-                      <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg space-y-5 mr-20"
+                <!-- Right Column -->
+                <div class="space-y-6">
+                  <!-- Licenses -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Licencias y permisos necesarios para la actividad
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'liquidaciones_irpf')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('liquidaciones_irpf')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
                       >
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="CIF de la empresa"
-                          />
-                          <DragAndDropFileInput
-                            name="sociedades_y_auditorias"
-                          />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Escrituras de constitución y apoderamiento"
-                          />
-                          <DragAndDropFileInput
-                            name="balance_resultados_provisional"
-                          />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Acta de titularidad real"
-                          />
-                          <DragAndDropFileInput name="liquidaciones_iva" />
-                        </div>
-                      </div>
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('liquidaciones_irpf', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'liquidaciones_irpf')"
+                      />
+                    </div>
 
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.liquidaciones_irpf.length > 0"
+                      class="mt-4 space-y-2"
+                    >
                       <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg space-y-5 ml-20"
+                        v-for="(file, index) in fileFields.liquidaciones_irpf"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
                       >
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Licencias y permisos necesarios para la actividad"
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
                           />
-                          <DragAndDropFileInput name="liquidaciones_irpf" />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
                         </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Certificación negativa del Registro Mercantil"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('liquidaciones_irpf', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-                    <!-- Add more fields as needed -->
-                  </form>
+                  </div>
+
+                  <!-- Mercantile Registry -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Certificación negativa del Registro Mercantil
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'modelo_390')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('modelo_390')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('modelo_390', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'modelo_390')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.modelo_390.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.modelo_390"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('modelo_390', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 3 Form -->
+            <div v-if="currentStep === 3" class="space-y-8">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Left Column -->
+                <div class="space-y-6">
+                  <!-- Model 347 -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Modelo 347
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'modelo_347')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('modelo_347')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('modelo_347', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'modelo_347')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.modelo_347.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.modelo_347"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('modelo_347', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Model 349 -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Modelo 349
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="handleFileDrop($event, 'modelo_349')"
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('modelo_349')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="(el) => setFileInputRef('modelo_349', el)"
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="handleFileSelect($event, 'modelo_349')"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.modelo_349.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.modelo_349"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('modelo_349', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- VAT Liquidations -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Liquidaciones periódicas de IVA del año anterior y el año
+                      en curso
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'vat_liquidations_current')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('vat_liquidations_current')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef('vat_liquidations_current', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'vat_liquidations_current')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.vat_liquidations_current.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.vat_liquidations_current"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('vat_liquidations_current', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- IRPF Liquidations -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Liquidaciones de IRPF del año anterior y el año en curso
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'irpf_liquidations_current')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('irpf_liquidations_current')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef('irpf_liquidations_current', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'irpf_liquidations_current')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.irpf_liquidations_current.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.irpf_liquidations_current"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="
+                            removeFile('irpf_liquidations_current', index)
+                          "
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                <div v-if="currentStep === 3">
-                  <!-- Step 3 Form -->
-                  <form>
-                    <!-- Form content for step 3 goes here -->
-                    <div class="max-w-7xl mx-auto columns-2">
-                      <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg space-y-5 mr-20"
+                <!-- Right Column -->
+                <div class="space-y-6">
+                  <!-- Model 390 Previous Year -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Modelo 390 del año anterior, si existe obligación de
+                      presentación
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'modelo_390_previous')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('modelo_390_previous')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
                       >
-                        <!-- <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel
-                              for="company-name"
-                              value="Linea de crédito"
-                            />
-                            <Select
-                              v-model="selectedValue"
-                              :options="options"
-                            />
-                          </div>
-                        </div> -->
-                        <!-- <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel for="company-name" value="Monto" />
-                            <NumericInput
-                              id="company-name"
-                              class="mt-1 block w-full"
-                              required
-                              autofocus
-                            />
-                          </div>
-                        </div>
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel for="company-name" value="Plazo" />
-                            <NumericInput
-                              id="company-name"
-                              class="mt-1 block w-full"
-                              required
-                              autofocus
-                            />
-                          </div>
-                        </div>
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel
-                              for="company-name"
-                              value="Fecha limite de credito"
-                            />
-                            <DatePicker />
-                          </div>
-                        </div>
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel
-                              for="company-name"
-                              value="Destino de los fondos"
-                            />
-                            <TextInput
-                              id="company-name"
-                              type="text"
-                              class="mt-1 block w-full"
-                              required
-                              autofocus
-                            />
-                          </div>
-                        </div>
-                        <div class="p-6 text-gray-900 dark:text-gray-100">
-                          <div class="columns-2">
-                            <InputLabel
-                              for="company-name"
-                              value="Eleccion Bancos"
-                            />
-                            <MultiSelect
-                              :options="multiSelectOptions"
-                              v-model="selectedValues"
-                              ref="multiSelect"
-                            />
-                          </div>
-                        </div> -->
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel for="company-name" value="Modelo 347" />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel for="company-name" value="Modelo 349" />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Liquidaciones periódicas de IVA del año anterior y el año en curso"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Liquidaciones de IRPF del año anterior y el año en curso"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                      </div>
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) => setFileInputRef('modelo_390_previous', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'modelo_390_previous')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.modelo_390_previous.length > 0"
+                      class="mt-4 space-y-2"
+                    >
                       <div
-                        class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg space-y-5 ml-20"
+                        v-for="(file, index) in fileFields.modelo_390_previous"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
                       >
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Modelo 390 del año anterior, si existe obligación de presentación"
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
                           />
-                          <DragAndDropFileInput name="modelo_390" />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
                         </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Modelo 347 del año anterior, si existe obligación de presentación"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Certificados de corriente de pago Seguridad Social y Hacienda"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
-                        <div class="text-gray-900 dark:text-gray-100 space-y-2">
-                          <InputLabel
-                            for="company-name"
-                            value="Declaración de bienes de la empresa, si tiene activos"
-                          />
-                          <DragAndDropFileInput name="modelo_390" />
-                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('modelo_390_previous', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
                       </div>
                     </div>
-                    <!-- Add more fields as needed -->
-                  </form>
+                  </div>
+
+                  <!-- Model 347 Previous Year -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Modelo 347 del año anterior, si existe obligación de
+                      presentación
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'modelo_347_previous')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('modelo_347_previous')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) => setFileInputRef('modelo_347_previous', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'modelo_347_previous')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.modelo_347_previous.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(file, index) in fileFields.modelo_347_previous"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="removeFile('modelo_347_previous', index)"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Payment Certificates -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Certificados de corriente de pago Seguridad Social y
+                      Hacienda
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop(
+                          $event,
+                          'social_security_tax_certificates'
+                        )
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="
+                        triggerFileInput('social_security_tax_certificates')
+                      "
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef(
+                              'social_security_tax_certificates',
+                              el
+                            )
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect(
+                            $event,
+                            'social_security_tax_certificates'
+                          )
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="
+                        fileFields.social_security_tax_certificates.length > 0
+                      "
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.social_security_tax_certificates"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="
+                            removeFile(
+                              'social_security_tax_certificates',
+                              index
+                            )
+                          "
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Assets Declaration -->
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Declaración de bienes de la empresa, si tiene activos
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, 'company_assets_declaration')
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput('company_assets_declaration')"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) =>
+                            setFileInputRef('company_assets_declaration', el)
+                        "
+                        type="file"
+                        class="hidden"
+                        multiple
+                        accept=".pdf"
+                        @change="
+                          handleFileSelect($event, 'company_assets_declaration')
+                        "
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div
+                      v-if="fileFields.company_assets_declaration.length > 0"
+                      class="mt-4 space-y-2"
+                    >
+                      <div
+                        v-for="(
+                          file, index
+                        ) in fileFields.company_assets_declaration"
+                        :key="index"
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="
+                            removeFile('company_assets_declaration', index)
+                          "
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>

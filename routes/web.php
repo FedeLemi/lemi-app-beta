@@ -44,3 +44,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/upload', [FileUploadController::class, 'upload'])->name('upload');
     Route::post('/save-data', [DataController::class, 'store'])->name('save-data');
 });
+
+// Ruta del dashboard (protegida)
+Route::middleware(['auth', 'verified'])->get('/dashboard', function () {
+    return Inertia::render('Dashboard');
+})->name('dashboard');
