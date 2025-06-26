@@ -35,7 +35,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('application');
 
     Route::get('/dashboard', function () {
-        return Inertia::render('dashboard');
+        return Inertia::render('Dashboard');
     })->name('dashboard');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -43,6 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::post('/upload', [FileUploadController::class, 'upload'])->name('upload');
     Route::post('/save-data', [DataController::class, 'store'])->name('save-data');
+    Route::get('/get-company-data', [DataController::class, 'getCompanyData'])->name('get-company-data');
 });
 
 // Ruta del dashboard (protegida)

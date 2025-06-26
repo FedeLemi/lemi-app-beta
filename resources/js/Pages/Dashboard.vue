@@ -6,7 +6,7 @@ import TextInput from "@/Components/TextInput.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import NumericInput from "@/Components/NumericInput.vue";
 import Select from "@/Components/Select.vue";
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useDark } from "@vueuse/core";
 import {
@@ -23,6 +23,10 @@ const isDark = useDark();
 
 // Track the current step
 const currentStep = ref(1);
+
+const employeeCount = ref(0);
+const businessExplanation = ref("");
+const selectedActivity = ref("");
 
 // Change the step when a step is clicked
 const goToStep = (step) => {
@@ -46,9 +50,12 @@ const options = ref([
   { value: "Avales", label: "Avales" },
 ]);
 
-// Define the selected model value
-const selectedValue = ref("");
-const isTouched = ref(false);
+const isTouched = ref({
+  employeeCount: false,
+  businessExplanation: false,
+  selectedActivity: false,
+});
+
 const optionsActivities = ref([
   {
     value: "Agricultura, ganadería, silvicultura y pesca",
@@ -137,6 +144,12 @@ const fileFields = ref({
   modelo_390: [],
   modelo_347: [],
   modelo_349: [],
+  vat_liquidations_current: [],
+  irpf_liquidations_current: [],
+  modelo_390_previous: [],
+  modelo_347_previous: [],
+  social_security_tax_certificates: [],
+  company_assets_declaration: [],
 });
 
 const fileInputRefs = ref({});
@@ -187,30 +200,49 @@ const debounce = (func, delay) => {
   };
 };
 
+onMounted(async () => {
+  try {
+    const response = await axios.get(route("get-company-data"));
+    if (response.data) {
+      employeeCount.value = response.data.number_of_employees || 0;
+      businessExplanation.value = response.data.business_description || "";
+      selectedActivity.value = response.data.company_activity || "";
+    }
+  } catch (error) {
+    console.error("Error loading data:", error);
+  }
+});
+
 // Debounce the saveData function to prevent excessive calls
 const saveData = debounce(async () => {
-  if (!isTouched.value) return; // Only save if the input has been touched
-
   try {
     const response = await axios.post(route("save-data"), {
       employeeCount: employeeCount.value,
-      // Include other fields as needed
+      businessExplanation: businessExplanation.value,
+      selectedActivity: selectedActivity.value,
     });
+
+    // Reset touched state after successful save
+    Object.keys(isTouched.value).forEach((key) => {
+      if (isTouched.value[key]) isTouched.value[key] = false;
+    });
+
     console.log("Data saved successfully:", response.data);
   } catch (error) {
-    console.error(
-      "Error saving data:",
-      error.response ? error.response.data : error.message
-    );
+    console.error("Error saving data:", error);
   }
-}, 500); // Adjust debounce delay as needed
+}, 500);
 
-const handleBlur = () => {
-  saveData(); // Call the debounced saveData function when the input loses focus
+// Handle blur for all fields
+const handleBlur = (field) => {
+  if (isTouched.value[field]) {
+    saveData();
+  }
 };
 
-const handleInput = () => {
-  isTouched.value = true; // Mark input as touched when user starts typing
+// Handle input for all fields
+const handleInput = (field) => {
+  isTouched.value[field] = true;
 };
 </script>
 
@@ -365,7 +397,7 @@ const handleInput = () => {
                       Actividad de la empresa
                     </label>
                     <Select
-                      v-model="selectedValue"
+                      v-model="selectedActivity"
                       :options="optionsActivities"
                       :class="[
                         isDark
@@ -373,6 +405,8 @@ const handleInput = () => {
                           : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
                       ]"
                       class="w-full px-4 py-3 rounded-lg border transition-colors"
+                      @blur="handleBlur('selectedActivity')"
+                      @input="handleInput('selectedActivity')"
                     />
                   </div>
 
@@ -385,7 +419,7 @@ const handleInput = () => {
                       Empleados
                     </label>
                     <NumericInput
-                      id="employeeCount"
+                      v-model="employeeCount"
                       :class="[
                         isDark
                           ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
@@ -393,8 +427,8 @@ const handleInput = () => {
                       ]"
                       class="w-full px-4 py-3 rounded-lg border transition-colors"
                       required
-                      @blur="handleBlur"
-                      @input="handleInput"
+                      @blur="handleBlur('employeeCount')"
+                      @input="handleInput('employeeCount')"
                     />
                   </div>
 
@@ -407,6 +441,7 @@ const handleInput = () => {
                       Explicación del negocio
                     </label>
                     <TextAreaInput
+                      v-model="businessExplanation"
                       :class="[
                         isDark
                           ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
@@ -414,6 +449,8 @@ const handleInput = () => {
                       ]"
                       class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
                       required
+                      @blur="handleBlur('businessExplanation')"
+                      @input="handleInput('businessExplanation')"
                     />
                   </div>
                 </div>

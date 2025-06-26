@@ -15,38 +15,56 @@ class DataController extends Controller
      */
     public function store(Request $request)
     {
-        info($request);
-        // Validate the incoming request data
         $validated = $request->validate([
-            // 'selectedValue' => 'required|string',
-            // 'multiSelectValues' => 'required|array',
             'employeeCount' => 'required|integer|min:0',
+            'businessExplanation' => 'required|string',
+            'selectedActivity' => 'required|string'
         ]);
+        
         $user = Auth::user();
 
-        // Ensure the user has an associated company
-        if (! $user->company) {
+        if (!$user->company) {
             return response()->json([
                 'message' => 'User does not have an associated company.',
             ], 400);
         }
-        // info($validated['number_of_employees']);
-        // Extract the company ID from the authenticated user's company
+
         $companyId = $user->company->id;
 
         FinancialInformation::updateOrCreate(
-            ['company_id' => $companyId], // Find by company_id
+            ['company_id' => $companyId],
             [
-                // 'company_activity' => $validated['company_activity'],
-                // 'business_description' => $validated['business_description'],
-                'number_of_employees' => $validated['employeeCount'] ? $validated['employeeCount'] : '',
+                'number_of_employees' => $validated['employeeCount'],
+                'business_description' => $validated['businessExplanation'],
+                'company_activity' => $validated['selectedActivity']
             ]
         );
 
-        // For demonstration purposes, just return the validated data
         return response()->json([
             'message' => 'Data saved successfully',
             'data' => $validated,
         ], 200);
+    }
+    
+    public function getCompanyData()
+    {
+        $user = Auth::user();
+        
+        // Return default values if no company exists
+        if (!$user->company) {
+            return response()->json([
+                'number_of_employees' => 0,
+                'business_description' => '',
+                'company_activity' => ''
+            ]);
+        }
+
+        $financialInfo = FinancialInformation::where('company_id', $user->company->id)->first();
+
+        return response()->json([
+            'number_of_employees' => $financialInfo->number_of_employees ?? 0,
+            'business_description' => $financialInfo->business_description ?? '',
+            'company_activity' => $financialInfo->company_activity ?? ''
+        ]);
     }
 }
