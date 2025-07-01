@@ -18,6 +18,10 @@ import {
   BriefcaseIcon,
   BuildingIcon,
 } from "lucide-vue-next";
+import { useI18n } from "vue-i18n"; // Add this import
+
+const { t } = useI18n(); // Initialize i18n
+const $t = t; // Expose t as $t for template
 
 const isDark = useDark();
 
@@ -249,27 +253,16 @@ const handleInput = (field) => {
 <template>
   <Head title="Dashboard" />
 
-  <AuthenticatedLayout>
+  <AuthenticatedLayout
+    :page-title="$t('documents.title')"
+    :page-description="$t('documents.description')"
+  >
     <div
-      class="mt-20 max-w-7xl mx-auto p-8 rounded-lg"
+      class="max-w-7xl mx-auto p-8 rounded-lg"
       :class="isDark ? 'bg-gray-900' : 'bg-violet-900'"
     >
-      <div class="max-w-7xl mx-auto">
-        <h2
-          class="font-semibold text-xl"
-          :class="isDark ? 'text-gray-200' : 'text-white'"
-        >
-          Mi empresa
-        </h2>
-        <p :class="isDark ? 'text-gray-300' : 'text-white'">
-          Completa tu información para tenerla disponible al momento de hacer
-          una nueva solicitud
-        </p>
-      </div>
-
-      <!-- Step Navigation -->
       <div
-        class="max-w-7xl mx-auto flex flex-wrap justify-between my-12 text-center md:flex-nowrap md:space-x-4 space-y-6 md:space-y-0"
+        class="max-w-7xl mx-auto flex flex-wrap justify-between my-4 text-center md:flex-nowrap md:space-x-4 space-y-6 md:space-y-0"
       >
         <!-- Step 1 -->
         <div
@@ -302,7 +295,7 @@ const handleInput = (field) => {
                 : 'text-white'
             "
           >
-            Información económica
+            {{ $t("dashboard.economicInfo") }}
           </div>
         </div>
 
@@ -337,7 +330,7 @@ const handleInput = (field) => {
                 : 'text-white'
             "
           >
-            Información legal
+            {{ $t("dashboard.legalInfo") }}
           </div>
         </div>
 
@@ -372,7 +365,7 @@ const handleInput = (field) => {
                 : 'text-white'
             "
           >
-            Información fiscal
+            {{ $t("dashboard.taxInfo") }}
           </div>
         </div>
       </div>
@@ -394,7 +387,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Actividad de la empresa
+                      {{ $t("dashboard.companyActivity") }}
                     </label>
                     <Select
                       v-model="selectedActivity"
@@ -416,7 +409,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Empleados
+                      {{ $t("dashboard.employees") }}
                     </label>
                     <NumericInput
                       v-model="employeeCount"
@@ -438,7 +431,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Explicación del negocio
+                      {{ $t("dashboard.businessExplanation") }}
                     </label>
                     <TextAreaInput
                       v-model="businessExplanation"
@@ -463,7 +456,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Impuestos de sociedades de los últimos dos años
+                      {{ $t("dashboard.corporateTaxes") }}
                     </label>
                     <div
                       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
@@ -485,8 +478,7 @@ const handleInput = (field) => {
                         class="text-sm mb-2"
                         :class="isDark ? 'text-gray-300' : 'text-gray-600'"
                       >
-                        Arrastra y suelta archivos aquí o haz clic para
-                        seleccionar
+                        {{ $t("dashboard.dragDrop") }}
                       </p>
                       <input
                         :ref="(el) => setFileInputRef('corporate_taxes', el)"
@@ -538,7 +530,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Balance y cuenta de resultados del ejercicio en curso
+                      {{ $t("dashboard.balanceSheet") }}
                     </label>
                     <div
                       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
@@ -624,7 +616,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Pool bancario (relación de deudas bancarias de la empresa)
+                      {{ $t("dashboard.bankDebt") }}
                     </label>
                     <div
                       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
@@ -701,7 +693,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      CIRBE
+                      {{ $t("dashboard.cirbe") }}
                     </label>
                     <div
                       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
@@ -776,7 +768,7 @@ const handleInput = (field) => {
                       class="block text-sm font-medium"
                       :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                     >
-                      Resumen de IVAs del último año e IVAs del año en curso
+                      {{ $t("dashboard.vatSummary") }}
                     </label>
                     <div
                       class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"

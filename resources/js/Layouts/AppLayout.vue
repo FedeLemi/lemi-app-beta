@@ -50,6 +50,19 @@
             </Link>
 
             <Link
+              href="/account"
+              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+              :class="
+                isDark
+                  ? 'text-purple-200 hover:bg-purple-800'
+                  : 'text-purple-700 hover:bg-purple-200'
+              "
+            >
+              <UserIcon class="w-5 h-5" />
+              <span>{{ $t("nav.documents") }}</span>
+            </Link>
+
+            <Link
               href="/applications"
               class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
               :class="
@@ -62,7 +75,7 @@
               <span>{{ $t("nav.applications") }}</span>
             </Link>
 
-            <Link
+            <!-- <Link
               href="/account"
               class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
               :class="
@@ -73,7 +86,7 @@
             >
               <UserIcon class="w-5 h-5" />
               <span>{{ $t("nav.account") }}</span>
-            </Link>
+            </Link> -->
           </nav>
         </div>
 

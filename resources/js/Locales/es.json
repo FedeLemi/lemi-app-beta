@@ -1,9 +1,9 @@
 {
   "nav": {
     "dashboard": "Dashboard",
-    "company": "Mi Empresa",
+    "company": "Empresas",
     "applications": "Solicitudes",
-    "account": "Mi Cuenta"
+    "documents": "Documentos"
   },
   "common": {
     "yes": "Sí",
@@ -19,6 +19,26 @@
     "description": "Completa tu solicitud de financiación en 5 pasos sencillos",
     "step": "Paso",
     "of": "de"
+  },
+  "documents": {
+    "title": "Documentos",
+    "description": "Completa tu Documentos de Documentos en 5 Documentos Documentos",
+    "step": "Paso",
+    "of": "de"
+  },
+  "dashboard": {
+    "economicInfo": "Información económica",
+    "legalInfo": "Información legal",
+    "taxInfo": "Información fiscal",
+    "companyActivity": "Actividad de la empresa",
+    "employees": "Empleados",
+    "businessExplanation": "Explicación del negocio",
+    "corporateTaxes": "Impuestos de sociedades de los últimos dos años",
+    "balanceSheet": "Balance y cuenta de resultados del ejercicio en curso",
+    "bankDebt": "Pool bancario (relación de deudas bancarias de la empresa)",
+    "cirbe": "CIRBE",
+    "vatSummary": "Resumen de IVAs del último año e IVAs del año en curso",
+    "dragDrop": "Arrastra y suelta archivos aquí o haz clic para seleccionar"
   },
   "login": {
     "title": "Bienvenido a Lemi Finance",
