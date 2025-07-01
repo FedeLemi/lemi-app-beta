@@ -3,223 +3,108 @@
     <div class="flex">
       <!-- Sidebar -->
       <div
-        class="sidebar-transition flex flex-col w-64 min-h-screen"
-        :class="isDark ? 'bg-purple-900' : 'bg-purple-900'"
+        class="flex flex-col min-h-screen transition-all duration-300 ease-in-out overflow-hidden bg-purple-900"
+        :class="sidebarOpen ? 'w-64' : 'w-0'"
       >
-        <div class="p-6 flex-1 overflow-y-auto">
-          <div class="flex items-center space-x-3 mb-8">
-            <div
-              class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center"
-            >
-              <span class="text-white font-bold text-sm">L</span>
-            </div>
-            <span class="text-xl font-bold text-white"> LEMI Finance </span>
-            <button
-              @click="sidebarOpen = !sidebarOpen"
-              class="ml-auto text-purple-300 hover:text-white"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
+        <div class="w-64 flex flex-col min-h-screen">
+          <div class="p-6 flex-1 overflow-y-auto">
+            <div class="flex items-center space-x-3 mb-8">
+              <div
+                class="w-8 h-8 bg-purple-600 rounded-lg flex items-center justify-center"
               >
-                <path
-                  fill-rule="evenodd"
-                  d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                  clip-rule="evenodd"
-                />
-              </svg>
-            </button>
+                <span class="text-white font-bold text-sm">L</span>
+              </div>
+              <span class="text-xl font-bold text-white"> LEMI Finance </span>
+              <button
+                @click="sidebarOpen = !sidebarOpen"
+                class="ml-auto text-purple-300 hover:text-white"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-5 w-5"
+                  viewBox="0 0 20 20"
+                  fill="currentColor"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <nav class="space-y-2">
+              <Link
+                href="/dashboard"
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+                :class="
+                  isDark
+                    ? 'text-purple-200 hover:bg-purple-800'
+                    : 'text-purple-700 hover:bg-purple-200'
+                "
+              >
+                <GridIcon class="w-5 h-5" />
+                <span>{{ $t("nav.dashboard") }}</span>
+              </Link>
+
+              <Link
+                href="/application"
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+                :class="[
+                  isDark
+                    ? 'bg-purple-800 text-white'
+                    : 'bg-purple-600 text-white',
+                  'font-medium',
+                ]"
+              >
+                <BuildingIcon class="w-5 h-5" />
+                <span>{{ $t("nav.company") }}</span>
+              </Link>
+
+              <Link
+                href="/dashboard"
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+                :class="
+                  isDark
+                    ? 'text-purple-200 hover:bg-purple-800'
+                    : 'text-purple-700 hover:bg-purple-200'
+                "
+              >
+                <UserIcon class="w-5 h-5" />
+                <span>{{ $t("nav.documents") }}</span>
+              </Link>
+
+              <Link
+                href="/dashboard"
+                class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+                :class="
+                  isDark
+                    ? 'text-purple-200 hover:bg-purple-800'
+                    : 'text-purple-700 hover:bg-purple-200'
+                "
+              >
+                <FileTextIcon class="w-5 h-5" />
+                <span>{{ $t("nav.applications") }}</span>
+              </Link>
+            </nav>
           </div>
 
-          <nav class="space-y-2">
-            <Link
-              href="/dashboard"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
-              :class="
-                isDark
-                  ? 'text-purple-200 hover:bg-purple-800'
-                  : 'text-purple-700 hover:bg-purple-200'
-              "
-            >
-              <GridIcon class="w-5 h-5" />
-              <span>{{ $t("nav.dashboard") }}</span>
-            </Link>
-
-            <Link
-              href="/application"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
-              :class="[
-                isDark
-                  ? 'bg-purple-800 text-white'
-                  : 'bg-purple-600 text-white',
-                'font-medium',
-              ]"
-            >
-              <BuildingIcon class="w-5 h-5" />
-              <span>{{ $t("nav.company") }}</span>
-            </Link>
-
-            <Link
-              href="/dashboard"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
-              :class="
-                isDark
-                  ? 'text-purple-200 hover:bg-purple-800'
-                  : 'text-purple-700 hover:bg-purple-200'
-              "
-            >
-              <UserIcon class="w-5 h-5" />
-              <span>{{ $t("nav.documents") }}</span>
-            </Link>
-
-            <Link
-              href="/dashboard"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
-              :class="
-                isDark
-                  ? 'text-purple-200 hover:bg-purple-800'
-                  : 'text-purple-700 hover:bg-purple-200'
-              "
-            >
-              <FileTextIcon class="w-5 h-5" />
-              <span>{{ $t("nav.applications") }}</span>
-            </Link>
-
-            <!-- <Link
-              href="/account"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
-              :class="
-                isDark
-                  ? 'text-purple-200 hover:bg-purple-800'
-                  : 'text-purple-700 hover:bg-purple-200'
-              "
-            >
-              <UserIcon class="w-5 h-5" />
-              <span>{{ $t("nav.account") }}</span>
-            </Link> -->
-          </nav>
-        </div>
-
-        <!-- Fixed Bottom User Profile -->
-        <div
-          class="sticky bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
-        >
-          <div class="pl-6 py-4 relative">
-            <button
-              @click="userDropdownOpen = !userDropdownOpen"
-              class="flex items-center space-x-3 cursor-pointer w-full"
-            >
-              <div
-                class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white"
+          <!-- Fixed Bottom User Profile -->
+          <div
+            class="sticky bottom-0 left-0 w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
+          >
+            <div class="pl-6 py-4 relative">
+              <button
+                @click="userDropdownOpen = !userDropdownOpen"
+                class="flex items-center space-x-3 cursor-pointer w-full"
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-6 w-6"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-              </div>
-              <div class="text-left">
-                <p class="text-sm font-medium text-purple-900 dark:text-white">
-                  {{ $page.props.auth.user.name }}
-                </p>
-                <p class="text-xs text-gray-500 dark:text-gray-400">
-                  Administrador
-                </p>
-              </div>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="fas fa-chevron-down ml-auto mr-4 text-gray-500 dark:text-gray-400 text-xs h-4 w-4 transition-transform"
-                :class="{ 'rotate-180': userDropdownOpen }"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M19 9l-7 7-7-7"
-                />
-              </svg>
-            </button>
-
-            <!-- Dropdown Menu -->
-            <div
-              v-show="userDropdownOpen"
-              class="dropdown-transition absolute bottom-full left-0 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 mb-2 z-50 border border-gray-200 dark:border-gray-700"
-              v-click-outside="closeUserDropdown"
-            >
-              <a
-                :href="route('profile.edit')"
-                class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="closeUserDropdown"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-3 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                  />
-                </svg>
-                Profile
-              </a>
-              <a
-                :href="route('profile.edit')"
-                class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                @click="closeUserDropdown"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-4 w-4 mr-3 text-gray-500"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                  />
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Settings
-              </a>
-              <div
-                class="border-t border-gray-200 dark:border-gray-700 my-1"
-              ></div>
-              <form @submit.prevent="logout">
-                <button
-                  type="submit"
-                  class="flex w-full items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
-                  @click="closeUserDropdown"
+                <div
+                  class="w-10 h-10 bg-purple-500 rounded-full flex items-center justify-center text-white"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    class="h-4 w-4 mr-3"
+                    class="h-6 w-6"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -228,12 +113,118 @@
                       stroke-linecap="round"
                       stroke-linejoin="round"
                       stroke-width="2"
-                      d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                     />
                   </svg>
-                  Log Out
-                </button>
-              </form>
+                </div>
+                <div class="text-left">
+                  <p
+                    class="text-sm font-medium text-purple-900 dark:text-white"
+                  >
+                    {{ $page.props.auth.user.name }}
+                  </p>
+                  <p class="text-xs text-gray-500 dark:text-gray-400">
+                    Administrador
+                  </p>
+                </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="fas fa-chevron-down ml-auto mr-4 text-gray-500 dark:text-gray-400 text-xs h-4 w-4 transition-transform"
+                  :class="{ 'rotate-180': userDropdownOpen }"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div
+                v-show="userDropdownOpen"
+                class="dropdown-transition absolute bottom-full left-0 w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 mb-2 z-50 border border-gray-200 dark:border-gray-700"
+                v-click-outside="closeUserDropdown"
+              >
+                <a
+                  :href="route('profile.edit')"
+                  class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="closeUserDropdown"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-3 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                    />
+                  </svg>
+                  Profile
+                </a>
+                <a
+                  :href="route('profile.edit')"
+                  class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                  @click="closeUserDropdown"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4 mr-3 text-gray-500"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                    />
+                  </svg>
+                  Settings
+                </a>
+                <div
+                  class="border-t border-gray-200 dark:border-gray-700 my-1"
+                ></div>
+                <form @submit.prevent="logout">
+                  <button
+                    type="submit"
+                    class="flex w-full items-center px-4 py-3 text-sm text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700"
+                    @click="closeUserDropdown"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-4 w-4 mr-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Log Out
+                  </button>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -247,19 +238,42 @@
           "
         >
           <div class="px-6 py-4 flex items-center justify-between">
-            <div>
-              <h1
-                class="text-2xl font-bold"
-                :class="isDark ? 'text-white' : 'text-gray-900'"
+            <div class="flex items-center">
+              <!-- Hamburger button for mobile -->
+              <button
+                v-if="!sidebarOpen"
+                @click="sidebarOpen = true"
+                class="mr-4 text-purple-900 dark:text-white"
               >
-                {{ pageTitle }}
-              </h1>
-              <p
-                class="text-sm"
-                :class="isDark ? 'text-gray-300' : 'text-gray-600'"
-              >
-                {{ pageDescription }}
-              </p>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  class="h-6 w-6"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 6h16M4 12h16M4 18h16"
+                  />
+                </svg>
+              </button>
+              <div>
+                <h1
+                  class="text-2xl font-bold"
+                  :class="isDark ? 'text-white' : 'text-gray-900'"
+                >
+                  {{ pageTitle }}
+                </h1>
+                <p
+                  class="text-sm"
+                  :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                >
+                  {{ pageDescription }}
+                </p>
+              </div>
             </div>
 
             <div class="flex items-center space-x-4">
