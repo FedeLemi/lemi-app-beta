@@ -20,6 +20,17 @@
     "step": "Step",
     "of": "of"
   },
+  "documents": {
+    "title": "Documents",
+    "description": "Complete the uploads of your documents",
+    "step": "Paso",
+    "of": "de"
+  },
+  "profile": {
+    "title": "Profile",
+    "profileInformation": "Profile Information",
+    "updateProfileInformationEmailAddress": "Update your account's profile information and email address."
+  },
   "dashboard": {
     "economicInfo": "Economic Information",
     "legalInfo": "Legal Information",

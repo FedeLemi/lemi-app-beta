@@ -26,6 +26,11 @@
     "step": "Paso",
     "of": "de"
   },
+  "profile": {
+    "title": "Pefil",
+    "profileInformation": "Informacion de perfil",
+    "updateProfileInformationEmailAddress": "Actualice la información del perfil y la dirección de correo electrónico de su cuenta."
+  },
   "dashboard": {
     "economicInfo": "Información económica",
     "legalInfo": "Información legal",
