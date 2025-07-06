@@ -34,9 +34,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Application/Index');
     })->name('application');
 
-    Route::get('/dashboard', function () {
-        return Inertia::render('Dashboard');
-    })->name('dashboard');
+     Route::get('/company', function () {
+        return Inertia::render('Company/Index');
+    })->name('company');
+
+    Route::get('/documents', function () {
+        return Inertia::render('Documents');
+    })->name('documents');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
