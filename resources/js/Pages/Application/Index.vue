@@ -1,242 +1,198 @@
 <template>
   <AuthenticatedLayout
-    page-title="Solicitud de crédito"
-    page-description="Complete los detalles de su solicitud"
+    page-title="Solicitudes de crédito"
+    page-description="Lista de solicitudes registradas"
   >
     <div class="max-w-6xl mx-auto">
-      <!-- Progress Bar -->
-      <div class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-          >
-            {{ $t("application.step") }} {{ store.currentStep }}
-            {{ $t("application.of") }} {{ store.totalSteps }}
-          </span>
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-          >
-            {{ Math.round(store.progressPercentage) }}%
-          </span>
-        </div>
+      <div class="flex justify-between items-center mb-6">
+        <h1
+          class="text-2xl font-bold"
+          :class="isDark ? 'text-white' : 'text-gray-800'"
+        >
+          {{ $t("creditApplication.listTitle") }}
+        </h1>
+        <Link
+          href="/company"
+          class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+        >
+          <div class="m-2 bg-purple-900 rounded p-2">
+            <!-- <PrimaryButton>
+            {{ $t("creditApplication.newApplication") }} </PrimaryButton
+          > -->
+            <a href="/application/create">Nuevo credito</a>
+          </div>
+        </Link>
+      </div>
+
+      <div
+        class="rounded-lg overflow-hidden shadow-sm"
+        :class="isDark ? 'bg-gray-800' : 'bg-white'"
+      >
+        <!-- Table Header -->
         <div
-          class="w-full bg-gray-200 rounded-full h-2"
-          :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"
+          class="grid grid-cols-12 gap-4 px-6 py-4 border-b"
+          :class="isDark ? 'border-gray-700' : 'border-gray-200'"
         >
           <div
-            class="bg-purple-600 h-2 rounded-full transition-all duration-300 ease-in-out"
-            :style="{ width: `${store.progressPercentage}%` }"
-          ></div>
+            class="col-span-3 font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            {{ $t("creditApplication.financingType") }}
+          </div>
+
+          <div
+            class="col-span-2 font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            {{ $t("creditApplication.amount") }}
+          </div>
+
+          <div
+            class="col-span-2 font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            {{ $t("creditApplication.term") }}
+          </div>
+
+          <div
+            class="col-span-2 font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            {{ $t("creditApplication.status") }}
+          </div>
+
+          <div
+            class="col-span-3 text-right font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            Ofertas
+            <!-- {{ $t("actions") }} -->
+          </div>
+
+          <div
+            class="col-span-3 text-right font-medium"
+            :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+          >
+            {{ $t("actions") }}
+          </div>
+        </div>
+
+        <!-- Table Rows -->
+        <div v-for="(application, index) in applications" :key="index">
+          <div
+            class="grid grid-cols-12 gap-4 px-6 py-4 items-center"
+            :class="{
+              'border-b': index !== applications.length - 1,
+              'border-gray-200': !isDark && index !== applications.length - 1,
+              'border-gray-700': isDark && index !== applications.length - 1,
+            }"
+          >
+            <!-- Financing Type -->
+            <div
+              class="col-span-3"
+              :class="isDark ? 'text-gray-200' : 'text-gray-800'"
+            >
+              {{ application.financingType }}
+            </div>
+
+            <!-- Amount -->
+            <div
+              class="col-span-2"
+              :class="isDark ? 'text-gray-200' : 'text-gray-800'"
+            >
+              {{ formatCurrency(application.amount) }}
+            </div>
+
+            <!-- Term -->
+            <div
+              class="col-span-2"
+              :class="isDark ? 'text-gray-200' : 'text-gray-800'"
+            >
+              {{ application.term }}
+            </div>
+
+            <!-- Status -->
+            <div class="">
+              <span :class="statusClasses(application.status)">
+                {{ application.status }}
+              </span>
+            </div>
+
+            <!-- Credits offers ring bell-->
+            <div class="p-8">
+              <a href="/application/offers">
+                <BellRing class="w-8 h-8 hover text-white"
+              /></a>
+            </div>
+
+            <!-- Actions -->
+            <div class="col-span-3 flex justify-end space-x-2">
+              <SecondaryButton>
+                <i class="fas fa-eye mr-1"></i> {{ $t("view") }}
+              </SecondaryButton>
+              <DangerButton>
+                <i class="fas fa-trash mr-1"></i> {{ $t("delete") }}
+              </DangerButton>
+            </div>
+          </div>
+        </div>
+
+        <!-- Empty State -->
+        <div v-if="applications.length === 0" class="text-center py-12">
+          <i
+            class="fas fa-inbox text-4xl mb-4"
+            :class="isDark ? 'text-gray-500' : 'text-gray-400'"
+          ></i>
+          <p :class="isDark ? 'text-gray-400' : 'text-gray-500'">
+            {{ $t("creditApplication.noApplications") }}
+          </p>
         </div>
       </div>
 
-      <!-- Step Content -->
-      <div class="rounded-lg p-6" :class="isDark ? 'bg-gray-800' : 'bg-white'">
-        <h2
-          class="text-xl font-bold mb-6"
-          :class="isDark ? 'text-white' : 'text-gray-800'"
-        >
-          {{ $t("creditApplication.title") }}
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Left Column -->
-          <div class="space-y-6">
-            <!-- Tipo de financiación -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.financingType')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.financingType"
-                :options="financingTypeOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- Monto -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.amount')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <NumericInput
-                v-model="form.amount"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- Plazo -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.term')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.term"
-                :options="termOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- ¿Tu empresa cuenta con garantias o aval de los socios? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.hasGuarantees')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.hasGuarantees"
-                :options="yesNoOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Right Column -->
-          <div class="space-y-6">
-            <!-- Finalidad / Destino de los fondos -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.purpose')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <TextAreaInput
-                v-model="form.purpose"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
-                required
-              />
-            </div>
-
-            <!-- ¿Con qué bancos opera actualmente tu empresa? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.currentBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <MultiSelect
-                v-model="form.currentBanks"
-                :options="bankOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                multiple
-              />
-            </div>
-
-            <!-- ¿Has iniciado solicitud con alguno de ellos? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.hasAppliedWithBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.hasAppliedWithBanks"
-                :options="yesNoOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-                @change="handleAppliedWithBanksChange"
-              />
-            </div>
-
-            <!-- ¿Con cuáles? (only shown if hasAppliedWithBanks is true) -->
-            <div v-if="form.hasAppliedWithBanks === 'Sí'" class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.appliedBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <MultiSelect
-                v-model="form.appliedBanks"
-                :options="bankOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                multiple
-              />
-            </div>
-          </div>
+      <!-- Pagination -->
+      <div
+        class="mt-6 flex justify-between items-center"
+        v-if="applications.length > 0"
+      >
+        <div :class="isDark ? 'text-gray-400' : 'text-gray-600'">
+          {{ $t("pagination.showing") }} 1-{{ applications.length }}
+          {{ $t("pagination.of") }} {{ totalItems }}
         </div>
-
-        <!-- Full width fields -->
-        <div class="mt-6 space-y-6">
-          <!-- ¿Cuándo necesitas disponer de la financiación? -->
-          <div class="space-y-2">
-            <InputLabel
-              :value="$t('creditApplication.fundingTiming')"
-              :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-            />
-            <Select
-              v-model="form.fundingTiming"
-              :options="fundingTimingOptions"
-              :class="[
-                isDark
-                  ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-              ]"
-              class="w-full px-4 py-3 rounded-lg border transition-colors"
-              required
-            />
-          </div>
-
-          <!-- ¿Quieres comentar algo más acerca de tu solicitud? -->
-          <div class="space-y-2">
-            <InputLabel
-              :value="$t('creditApplication.additionalComments')"
-              :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-            />
-            <TextAreaInput
-              v-model="form.additionalComments"
-              :class="[
-                isDark
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
-              ]"
-              class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
-            />
-          </div>
+        <div class="flex space-x-2">
+          <button
+            :disabled="currentPage === 1"
+            :class="[
+              isDark ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700',
+              'px-3 py-1 rounded border',
+            ]"
+          >
+            {{ $t("pagination.previous") }}
+          </button>
+          <button
+            :class="[
+              isDark ? 'bg-purple-600 text-white' : 'bg-purple-600 text-white',
+              'px-3 py-1 rounded border',
+            ]"
+          >
+            1
+          </button>
+          <button
+            :class="[
+              isDark ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700',
+              'px-3 py-1 rounded border',
+            ]"
+          >
+            2
+          </button>
+          <button
+            :disabled="currentPage === totalPages"
+            :class="[
+              isDark ? 'bg-gray-700 text-gray-300' : 'bg-white text-gray-700',
+              'px-3 py-1 rounded border',
+            ]"
+          >
+            {{ $t("pagination.next") }}
+          </button>
         </div>
       </div>
     </div>
@@ -244,111 +200,68 @@
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref } from "vue";
 import { useDark } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import TextAreaInput from "@/Components/TextAreaInput.vue";
-import NumericInput from "@/Components/NumericInput.vue";
-import Select from "@/Components/Select.vue";
-import MultiSelect from "@/Components/MultiSelect.vue";
-import { useApplicationStore } from "../stores/applicationStore";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
+import PrimaryButton from "@/Components/PrimaryButton.vue";
+import SecondaryButton from "@/Components/SecondaryButton.vue";
+import DangerButton from "@/Components/DangerButton.vue";
+import { BellRing } from "lucide-vue-next";
 
 const { t } = useI18n();
 const isDark = useDark();
-const store = useApplicationStore();
 
-// Form data
-const form = ref({
-  financingType: "",
-  amount: "",
-  term: "",
-  purpose: "",
-  hasGuarantees: "",
-  currentBanks: [],
-  hasAppliedWithBanks: "",
-  appliedBanks: [],
-  fundingTiming: "",
-  additionalComments: "",
-});
-
-// Options for select fields
-const financingTypeOptions = ref([
-  { value: "Línea de crédito", label: "Línea de crédito" },
-  { value: "Anticipo de caja", label: "Anticipo de caja" },
-  { value: "Confirming", label: "Confirming" },
-  { value: "Descuento comercial", label: "Descuento comercial" },
-  { value: "Préstamo a corto plazo", label: "Préstamo a corto plazo" },
-  { value: "Financiación export", label: "Financiación export" },
-  { value: "Financiación import", label: "Financiación import" },
-  { value: "Multilínea", label: "Multilínea" },
-  { value: "Préstamo largo plazo", label: "Préstamo largo plazo" },
-  { value: "Leasing", label: "Leasing" },
-  { value: "Renting", label: "Renting" },
-  { value: "Factoring", label: "Factoring" },
-  { value: "Anticipo facturas", label: "Anticipo facturas" },
-  { value: "Avales", label: "Avales" },
+// Sample data - replace with real data from API
+const applications = ref([
+  {
+    id: 1,
+    financingType: "Línea de crédito",
+    amount: 25000,
+    term: "12 meses",
+    purpose: "Capital de trabajo para expansión",
+    status: "Pendiente",
+    createdAt: "2023-05-15",
+  },
+  {
+    id: 2,
+    financingType: "Préstamo a corto plazo",
+    amount: 15000,
+    term: "6 meses",
+    purpose: "Compra de equipos nuevos",
+    status: "Aprobado",
+    createdAt: "2023-06-02",
+  },
+  {
+    id: 3,
+    financingType: "Leasing",
+    amount: 75000,
+    term: "36 meses",
+    purpose: "Adquisición de vehículos corporativos",
+    status: "Rechazado",
+    createdAt: "2023-06-20",
+  },
 ]);
 
-const termOptions = ref([
-  { value: "3 meses", label: "3 meses" },
-  { value: "6 meses", label: "6 meses" },
-  { value: "12 meses", label: "12 meses" },
-  { value: "18 meses", label: "18 meses" },
-  { value: "24 meses", label: "24 meses" },
-  { value: "36 meses", label: "36 meses" },
-  { value: "48 meses", label: "48 meses" },
-  { value: "60 meses", label: "60 meses" },
-]);
+const totalItems = ref(15);
+const currentPage = ref(1);
+const totalPages = ref(5);
 
-const yesNoOptions = ref([
-  { value: "Sí", label: "Sí" },
-  { value: "No", label: "No" },
-]);
-
-const bankOptions = ref([
-  { value: "Santander", label: "Santander" },
-  { value: "BBVA", label: "BBVA" },
-  { value: "CaixaBank", label: "CaixaBank" },
-  { value: "Bankia", label: "Bankia" },
-  { value: "Sabadell", label: "Sabadell" },
-  { value: "Bankinter", label: "Bankinter" },
-  { value: "ING", label: "ING" },
-  { value: "Deutsche Bank", label: "Deutsche Bank" },
-  { value: "BNP Paribas", label: "BNP Paribas" },
-  { value: "Otro", label: "Otro" },
-]);
-
-const fundingTimingOptions = ref([
-  { value: "Inmediato", label: "Inmediato" },
-  { value: "1-2 semanas", label: "1-2 semanas" },
-  { value: "1 mes", label: "1 mes" },
-  { value: "2-3 meses", label: "2-3 meses" },
-  { value: "Más de 3 meses", label: "Más de 3 meses" },
-]);
-
-// Handle change in hasAppliedWithBanks
-const handleAppliedWithBanksChange = () => {
-  if (form.value.hasAppliedWithBanks === "No") {
-    form.value.appliedBanks = [];
+const statusClasses = (status) => {
+  const base = "px-3 py-1 rounded-full text-xs font-medium";
+  if (status === "Aprobado") {
+    return `${base} bg-green-100 text-green-800`;
+  } else if (status === "Rechazado") {
+    return `${base} bg-red-100 text-red-800`;
   }
+  return `${base} bg-yellow-100 text-yellow-800`;
 };
 
-// Load saved data when component mounts
-onMounted(() => {
-  if (store.creditApplicationData) {
-    form.value = { ...store.creditApplicationData };
-  }
-});
-
-// Save form data to store whenever it changes
-watch(
-  form,
-  (newValue) => {
-    store.setCreditApplicationData(newValue);
-  },
-  { deep: true }
-);
+const formatCurrency = (amount) => {
+  return new Intl.NumberFormat("es-ES", {
+    style: "currency",
+    currency: "EUR",
+    minimumFractionDigits: 0,
+  }).format(amount);
+};
 </script>

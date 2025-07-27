@@ -56,7 +56,7 @@
                   <GridIcon class="w-5 h-5" />
                   <span>{{ $t("nav.dashboard") }}</span>
                 </Link>
-
+                <!-- 
                 <Link
                   href="/company"
                   class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
@@ -66,6 +66,19 @@
                       : 'bg-purple-600 text-white',
                     'font-medium',
                   ]"
+                >
+                  <BuildingIcon class="w-5 h-5" />
+                  <span>{{ $t("nav.company") }}</span>
+                </Link> -->
+
+                <Link
+                  href="/company"
+                  class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+                  :class="
+                    isDark
+                      ? 'text-purple-200 hover:bg-purple-800'
+                      : 'text-purple-700 hover:bg-purple-200'
+                  "
                 >
                   <BuildingIcon class="w-5 h-5" />
                   <span>{{ $t("nav.company") }}</span>
@@ -101,7 +114,7 @@
           </div>
 
           <!-- Fixed Bottom User Profile -->
-          <div class="flex-shrink-0 relative">
+          <div class="flex-shrink-0 bottom-0">
             <div
               class="w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
             >
@@ -184,7 +197,7 @@
                     </svg>
                     Profile
                   </a>
-                  <a
+                  <!-- <a
                     href="/settings"
                     class="flex items-center px-4 py-3 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                     @click="closeUserDropdown"
@@ -210,7 +223,7 @@
                       />
                     </svg>
                     Settings
-                  </a>
+                  </a> -->
                   <div
                     class="border-t border-gray-200 dark:border-gray-700 my-1"
                   ></div>

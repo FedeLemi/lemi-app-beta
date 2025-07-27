@@ -34,6 +34,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('Application/Index');
     })->name('application');
 
+    Route::get('/application/create', function () {
+        return Inertia::render('Application/Create');
+    })->name('');
+
+    Route::get('/application/offers', function () {
+        return Inertia::render('Application/CreditsOffers');
+    })->name('');
+
      Route::get('/company', function () {
         return Inertia::render('Company/Index');
     })->name('company');

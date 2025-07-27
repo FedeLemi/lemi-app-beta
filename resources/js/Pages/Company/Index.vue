@@ -5,7 +5,7 @@
   >
     <div class="max-w-6xl mx-auto">
       <!-- Progress Bar -->
-      <div class="mb-8">
+      <!-- <div class="mb-8">
         <div class="flex items-center justify-between mb-4">
           <span
             class="text-sm font-medium"
@@ -29,7 +29,7 @@
             :style="{ width: '33%' }"
           ></div>
         </div>
-      </div>
+      </div> -->
 
       <!-- Step Content -->
       <div class="min-h-[600px]">
@@ -380,7 +380,7 @@
             </div>
 
             <div class="flex justify-between pt-6">
-              <button
+              <!-- <button
                 type="button"
                 class="px-6 py-3 rounded-lg font-medium transition-colors"
                 :class="
@@ -390,7 +390,7 @@
                 "
               >
                 Volver
-              </button>
+              </button> -->
 
               <button
                 type="submit"
@@ -425,7 +425,7 @@
                   </svg>
                   Procesando...
                 </span>
-                <span v-else>Continuar</span>
+                <span v-else>Guardar</span>
               </button>
             </div>
           </form>

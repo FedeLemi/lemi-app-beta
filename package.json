@@ -17,7 +17,8 @@
         "pinia": "^3.0.3",
         "tailwindcss-animate": "^1.0.7",
         "vue": "^3.4.31",
-        "vue-i18n": "^9.14.4"
+        "vue-i18n": "^9.14.4",
+        "ziggy-js": "^2.5.3"
     },
     "devDependencies": {
         "@inertiajs/vue3": "^1.0.0",

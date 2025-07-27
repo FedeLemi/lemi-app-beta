@@ -2,7 +2,8 @@
   "nav": {
     "company": "My Company",
     "applications": "Applications",
-    "documents": "My documents"
+    "documents": "My documents",
+    "dashboard": "Dashboard"
   },
   "common": {
     "yes": "Yes",

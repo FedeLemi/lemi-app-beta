@@ -2,7 +2,8 @@
   "nav": {
     "company": "Empresas",
     "applications": "Solicitudes",
-    "documents": "Documentos"
+    "documents": "Documentos",
+    "dashboard": "Panel"
   },
   "common": {
     "yes": "Sí",
@@ -21,7 +22,7 @@
   },
   "documents": {
     "title": "Documentos",
-    "description": "Completa tu Documentos de Documentos en 5 Documentos Documentos",
+    "description": "Completa tu Documentos",
     "step": "Paso",
     "of": "de"
   },

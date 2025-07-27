@@ -6,6 +6,7 @@ import TextInput from "@/Components/TextInput.vue";
 import TextAreaInput from "@/Components/TextAreaInput.vue";
 import NumericInput from "@/Components/NumericInput.vue";
 import Select from "@/Components/Select.vue";
+import { PlusIcon, TrashIcon } from "lucide-vue-next";
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { useDark } from "@vueuse/core";
@@ -88,6 +89,23 @@ const triggerFileInput = (fieldName) => {
     fileInputRefs.value[fieldName].click();
   }
 };
+
+const additionalDocuments = ref([{ name: "", file: null }]);
+
+const addDocument = () => {
+  additionalDocuments.value.push({ name: "", file: null });
+};
+
+const removeDocument = (index) => {
+  additionalDocuments.value.splice(index, 1);
+};
+
+const handleAdditionalFileSelect = (event, index) => {
+  const files = Array.from(event.target.files);
+  if (files.length > 0) {
+    additionalDocuments.value[index].file = files[0];
+  }
+};
 </script>
 
 <template>
@@ -135,7 +153,7 @@ const triggerFileInput = (fieldName) => {
                 : 'text-white'
             "
           >
-            Documentos Económicos
+            Económicos
           </div>
         </div>
 
@@ -170,7 +188,7 @@ const triggerFileInput = (fieldName) => {
                 : 'text-white'
             "
           >
-            Documentos Fiscales
+            Fiscales
           </div>
         </div>
 
@@ -205,7 +223,42 @@ const triggerFileInput = (fieldName) => {
                 : 'text-white'
             "
           >
-            Documentos Legales
+            Legales
+          </div>
+        </div>
+
+        <!-- Step 3 - Documentos Adicionales -->
+        <div
+          class="flex flex-col items-center w-full md:w-1/5 cursor-pointer"
+          @click="goToStep(4)"
+        >
+          <div
+            class="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+            :class="
+              currentStep === 3
+                ? isDark
+                  ? 'bg-purple-600'
+                  : 'bg-purple-500'
+                : isDark
+                ? 'bg-gray-700'
+                : 'bg-violet-700'
+            "
+          >
+            <BuildingIcon class="w-8 h-8 text-white" />
+          </div>
+          <div
+            class="px-4 py-2 rounded-md font-medium"
+            :class="
+              currentStep === 3
+                ? isDark
+                  ? 'text-purple-300'
+                  : 'text-purple-100'
+                : isDark
+                ? 'text-gray-300'
+                : 'text-white'
+            "
+          >
+            Adicionales
           </div>
         </div>
       </div>
@@ -1215,6 +1268,130 @@ const triggerFileInput = (fieldName) => {
                     </div>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Add Step 4 content -->
+            <div v-if="currentStep === 4" class="space-y-8">
+              <div class="grid grid-cols-1 gap-8">
+                <div
+                  v-for="(doc, index) in additionalDocuments"
+                  :key="index"
+                  class="space-y-4 bg-gray-900 p-4"
+                >
+                  <div class="flex items-center justify-between">
+                    <h3
+                      class="font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Documento Adicional {{ index + 1 }}
+                    </h3>
+                    <button
+                      v-if="additionalDocuments.length > 1"
+                      type="button"
+                      @click="removeDocument(index)"
+                      class="text-red-500 hover:text-red-700"
+                    >
+                      <TrashIcon class="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Nombre del documento
+                    </label>
+                    <input
+                      type="text"
+                      v-model="doc.name"
+                      class="w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-700 dark:text-white"
+                      placeholder="Ej. Contrato de servicios"
+                    />
+                  </div>
+
+                  <div class="space-y-2">
+                    <label
+                      class="block text-sm font-medium"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      Archivo
+                    </label>
+                    <div
+                      class="border-2 border-dashed rounded-lg p-6 text-center transition-colors cursor-pointer"
+                      :class="
+                        isDark
+                          ? 'border-gray-600 hover:border-gray-500'
+                          : 'border-gray-300 hover:border-gray-400'
+                      "
+                      @drop.prevent="
+                        handleFileDrop($event, `additional_${index}`)
+                      "
+                      @dragover.prevent
+                      @dragenter.prevent
+                      @click="triggerFileInput(`additional_${index}`)"
+                    >
+                      <UploadIcon
+                        class="w-12 h-12 mx-auto mb-4"
+                        :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                      />
+                      <p
+                        class="text-sm mb-2"
+                        :class="isDark ? 'text-gray-300' : 'text-gray-600'"
+                      >
+                        Arrastra y suelta archivos aquí o haz clic para
+                        seleccionar
+                      </p>
+                      <input
+                        :ref="
+                          (el) => setFileInputRef(`additional_${index}`, el)
+                        "
+                        type="file"
+                        class="hidden"
+                        accept=".pdf"
+                        @change="handleAdditionalFileSelect($event, index)"
+                      />
+                    </div>
+
+                    <!-- File list -->
+                    <div v-if="doc.file" class="mt-4">
+                      <div
+                        class="flex items-center justify-between p-3 rounded-lg"
+                        :class="isDark ? 'bg-gray-700' : 'bg-gray-50'"
+                      >
+                        <div class="flex items-center space-x-3">
+                          <FileTextIcon
+                            class="w-5 h-5"
+                            :class="isDark ? 'text-gray-400' : 'text-gray-500'"
+                          />
+                          <span
+                            class="text-sm"
+                            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                          >
+                            {{ doc.file.name }}
+                          </span>
+                        </div>
+                        <button
+                          type="button"
+                          @click="doc.file = null"
+                          class="text-red-500 hover:text-red-700"
+                        >
+                          <XIcon class="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  @click="addDocument"
+                  class="flex items-center justify-center px-4 py-2 bg-purple-500 text-white rounded-md hover:bg-purple-600 transition-colors mt-6"
+                >
+                  <PlusIcon class="w-5 h-5 mr-1" />
+                  Agregar Documento
+                </button>
               </div>
             </div>
           </div>
