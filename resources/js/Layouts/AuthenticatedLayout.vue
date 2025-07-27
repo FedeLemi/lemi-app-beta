@@ -114,7 +114,7 @@
           </div>
 
           <!-- Fixed Bottom User Profile -->
-          <div class="flex-shrink-0 bottom-0">
+          <div class="flex-shrink-0 relative">
             <div
               class="w-full bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700"
             >
