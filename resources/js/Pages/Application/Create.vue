@@ -1,271 +1,544 @@
 <template>
   <AuthenticatedLayout
-    page-title="Solicitud de crédito"
-    page-description="Complete los detalles de su solicitud"
+    :page-title="$t('creditApplication.create.pageTitle')"
+    :page-description="$t('creditApplication.create.pageDescription')"
   >
     <div class="max-w-6xl mx-auto">
-      <!-- Progress Bar -->
-      <!-- <div class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+      <div class="max-w-4xl mx-auto">
+        <div class="text-center mb-8">
+          <h2
+            class="text-2xl font-bold mb-2 font-serif"
+            :class="isDark ? 'text-white' : 'text-gray-900'"
           >
-            {{ $t("application.step") }} {{ store.currentStep }}
-            {{ $t("application.of") }} {{ store.totalSteps }}
-          </span>
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-          >
-            {{ Math.round(store.progressPercentage) }}%
-          </span>
-        </div>
-        <div
-          class="w-full bg-gray-200 rounded-full h-2"
-          :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"
-        >
-          <div
-            class="bg-purple-600 h-2 rounded-full transition-all duration-300 ease-in-out"
-            :style="{ width: `${store.progressPercentage}%` }"
-          ></div>
-        </div>
-      </div> -->
-
-      <!-- Step Content -->
-      <div class="rounded-lg p-6" :class="isDark ? 'bg-gray-800' : 'bg-white'">
-        <h2
-          class="text-xl font-bold mb-6"
-          :class="isDark ? 'text-white' : 'text-gray-800'"
-        >
-          {{ $t("creditApplication.title") }}
-        </h2>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Left Column -->
-          <div class="space-y-6">
-            <!-- Tipo de financiación -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.financingType')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.financingType"
-                :options="financingTypeOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- Monto -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.amount')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <NumericInput
-                v-model="form.amount"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- Plazo -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.term')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.term"
-                :options="termOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-
-            <!-- ¿Tu empresa cuenta con garantias o aval de los socios? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.hasGuarantees')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.hasGuarantees"
-                :options="yesNoOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-              />
-            </div>
-          </div>
-
-          <!-- Right Column -->
-          <div class="space-y-6">
-            <!-- Finalidad / Destino de los fondos -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.purpose')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <TextAreaInput
-                v-model="form.purpose"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
-                required
-              />
-            </div>
-
-            <!-- ¿Con qué bancos opera actualmente tu empresa? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.currentBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <MultiSelect
-                v-model="form.currentBanks"
-                :options="bankOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                multiple
-              />
-            </div>
-
-            <!-- ¿Has iniciado solicitud con alguno de ellos? -->
-            <div class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.hasAppliedWithBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <Select
-                v-model="form.hasAppliedWithBanks"
-                :options="yesNoOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                required
-                @change="handleAppliedWithBanksChange"
-              />
-            </div>
-
-            <!-- ¿Con cuáles? (only shown if hasAppliedWithBanks is true) -->
-            <div v-if="form.hasAppliedWithBanks === 'Sí'" class="space-y-2">
-              <InputLabel
-                :value="$t('creditApplication.appliedBanks')"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              />
-              <MultiSelect
-                v-model="form.appliedBanks"
-                :options="bankOptions"
-                :class="[
-                  isDark
-                    ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                    : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-                ]"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
-                multiple
-              />
-            </div>
-          </div>
+          </h2>
         </div>
 
-        <!-- Full width fields -->
-        <div class="mt-6 space-y-6">
-          <!-- ¿Cuándo necesitas disponer de la financiación? -->
-          <div class="space-y-2">
-            <InputLabel
-              :value="$t('creditApplication.fundingTiming')"
+        <form class="space-y-8">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Left Column -->
+            <div class="space-y-6">
+              <!-- Amount (with € symbol) -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.amount') }}
+                </label>
+                <div class="relative">
+                  <span class="absolute left-3 top-1/2 transform -translate-y-1/2" :class="isDark ? 'text-gray-400' : 'text-gray-500'">€</span>
+                  <input
+                    v-model="form.amount"
+                    type="text"
+                    @input="handleAmountInput"
+                    class="w-full px-4 py-3 rounded-xl border transition-colors pl-8"
+                    :class="[
+                      isDark
+                        ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                        : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
+                    ]"
+                    required
+                  />
+                </div>  
+              </div>
+              
+              <!-- Financing Type -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.financingType') }}
+                </label>
+                <select
+                  v-model="form.financingType"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                >
+                  <option value="">{{ $t('creditApplication.create.finTypes') }}</option>
+                  <option 
+                    v-for="option in financingTypeOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+              
+              <!-- Grace Period -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.gracePeriod') }}
+                </label>
+                <select
+                  v-model="form.gracePeriod"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                >
+                  <option value="">{{ $t('creditApplication.create.gPeriod') }}</option>
+                  <option 
+                    v-for="option in gracePeriodOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Funding Timing -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.fundingTiming') }}
+                </label>
+                <select
+                  v-model="form.fundingTiming"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                >
+                  <option value="">{{ $t('creditApplication.create.fTiming') }}</option>
+                  <option 
+                    v-for="option in fundingTimingOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+            </div> <!-- End Left Column -->
+
+            <!-- Right Column -->
+            <div class="space-y-6">
+              <!-- Term -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.term') }}
+                </label>
+                <select
+                  v-model="form.term"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                >
+                  <option value="">{{ $t('creditApplication.create.termfin') }}</option>
+                  <option 
+                    v-for="option in termOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+              
+              <!-- Has Guarantees -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.hasGuarantees') }}
+                </label>
+                <select
+                  v-model="form.hasGuarantees"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                >
+                  <option value="">{{ $t('creditApplication.create.hasGuarrants') }}</option>
+                  <option 
+                    v-for="option in yesNoOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Current Banks -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.currentBanks') }}
+                </label>
+                <div class="space-y-3">
+                  <div
+                    class="rounded-xl p-3 cursor-pointer transition-colors border"
+                    :class="[
+                      isDark
+                        ? 'bg-gray-800 border-gray-700 hover:bg-gray-700'
+                        : 'bg-gray-100 border-gray-300 hover:bg-gray-200',
+                    ]"
+                    @click="showCurrentBanks = !showCurrentBanks"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span :class="isDark ? 'text-gray-600' : 'text-gray-900'">
+                        {{ form.currentBanks.length > 0
+                          ? $t('creditApplication.create.banksSelected', { count: form.currentBanks.length })
+                          : $t('creditApplication.create.selectBanks') }}
+                      </span>
+                      <div :class="isDark ? 'text-gray-400' : 'text-gray-500'">
+                        {{ showCurrentBanks ? '▲' : '▼' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Selected banks display -->
+                  <div v-if="form.currentBanks.length > 0" class="flex flex-wrap gap-2">
+                    <div
+                      v-for="bankId in form.currentBanks"
+                      :key="bankId"
+                      class="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full transition-colors"
+                      :class="isDark ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-purple-100 text-purple-800 hover:bg-purple-200'"
+                    >
+                      {{ getBankName(bankId) }}
+                      <button
+                        type="button"
+                        class="ml-1 transition-colors"
+                        :class="isDark ? 'text-white hover:text-red-300' : 'text-purple-800 hover:text-red-500'"
+                        @click.stop="removeCurrentBank(bankId)"
+                      >
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Bank options dropdown -->
+                  <div
+                    v-if="showCurrentBanks"
+                    class="rounded-xl p-3 space-y-2 border"
+                    :class="isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-100 border-gray-300'"
+                  >
+                    <div
+                      v-for="bank in SPANISH_BANKS"
+                      :key="bank.id"
+                      class="flex items-center space-x-2"
+                    >
+                      <div class="relative">
+                        <input
+                          type="checkbox"
+                          :id="'current-bank-' + bank.id"
+                          :checked="form.currentBanks.includes(bank.id)"
+                          @change="() => toggleCurrentBank(bank.id)"
+                          class="sr-only"
+                        />
+                        <div
+                          class="w-4 h-4 border-2 rounded cursor-pointer transition-colors flex items-center justify-center"
+                          :class="[
+                            form.currentBanks.includes(bank.id)
+                              ? isDark
+                                ? 'bg-purple-900 border-purple-900'
+                                : 'bg-purple-800 border-purple-800'
+                              : isDark
+                                ? 'border-gray-500 hover:border-gray-400'
+                                : 'border-gray-400 hover:border-gray-500',
+                          ]"
+                          @click="toggleCurrentBank(bank.id)"
+                        >
+                          <svg
+                            v-if="form.currentBanks.includes(bank.id)"
+                            class="w-3 h-3 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <label
+                        :for="'current-bank-' + bank.id"
+                        class="cursor-pointer flex-1"
+                        :class="isDark ? 'text-white' : 'text-gray-900'"
+                      >
+                        {{ bank.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Has Applied With Banks -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.hasAppliedWithBanks') }}
+                </label>
+                <select
+                  v-model="form.hasAppliedWithBanks"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
+                  :class="[
+                    isDark
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
+                      : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
+                  ]"
+                  required
+                  @change="handleAppliedWithBanksChange"
+                >
+                  <option value="">{{ $t('creditApplication.create.whityourhbanks') }}</option>
+                  <option 
+                    v-for="option in yesNoOptions" 
+                    :key="option.value" 
+                    :value="option.value"
+                  >
+                    {{ option.label }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Applied Banks (conditional) -->
+              <div v-if="form.hasAppliedWithBanks === 'yes'">
+                <label
+                  class="block text-sm font-medium mb-2"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ $t('creditApplication.create.appliedBanks') }}
+                </label>
+                <div class="space-y-3">
+                  <div
+                    class="rounded-md p-3 cursor-pointer transition-colors border"
+                    :class="[
+                      isDark
+                        ? 'bg-gray-800 border-gray-600 hover:bg-gray-700'
+                        : 'bg-gray-100 border-gray-300 hover:bg-gray-200',
+                    ]"
+                    @click="showAppliedBanks = !showAppliedBanks"
+                  >
+                    <div class="flex items-center justify-between">
+                      <span :class="isDark ? 'text-white' : 'text-gray-900'">
+                        {{ form.appliedBanks.length > 0
+                          ? $t('creditApplication.create.banksSelected', { count: form.appliedBanks.length })
+                          : $t('creditApplication.create.selectBanks') }}
+                      </span>
+                      <div :class="isDark ? 'text-gray-400' : 'text-gray-500'">
+                        {{ showAppliedBanks ? '▲' : '▼' }}
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Selected banks display -->
+                  <div v-if="form.appliedBanks.length > 0" class="flex flex-wrap gap-2">
+                    <div
+                      v-for="bankId in form.appliedBanks"
+                      :key="bankId"
+                      class="inline-flex items-center gap-1 px-3 py-1 text-sm rounded-full transition-colors"
+                      :class="isDark ? 'bg-purple-600 text-white hover:bg-purple-700' : 'bg-purple-100 text-purple-800 hover:bg-purple-200'"
+                    >
+                      {{ getBankName(bankId) }}
+                      <button
+                        type="button"
+                        class="ml-1 transition-colors"
+                        :class="isDark ? 'text-white hover:text-red-300' : 'text-purple-800 hover:text-red-500'"
+                        @click.stop="removeAppliedBank(bankId)"
+                      >
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Bank options dropdown -->
+                  <div
+                    v-if="showAppliedBanks"
+                    class="rounded-xl p-3 space-y-2 border"
+                    :class="isDark ? 'bg-gray-800 border-gray-600' : 'bg-gray-100 border-gray-300'"
+                  >
+                    <div
+                      v-for="bank in SPANISH_BANKS"
+                      :key="bank.id"
+                      class="flex items-center space-x-2"
+                    >
+                      <div class="relative">
+                        <input
+                          type="checkbox"
+                          :id="'applied-bank-' + bank.id"
+                          :checked="form.appliedBanks.includes(bank.id)"
+                          @change="() => toggleAppliedBank(bank.id)"
+                          class="sr-only"
+                        />
+                        <div
+                          class="w-4 h-4 border-2 rounded cursor-pointer transition-colors flex items-center justify-center"
+                          :class="[
+                            form.appliedBanks.includes(bank.id)
+                              ? isDark
+                                ? 'bg-purple-600 border-purple-600'
+                                : 'bg-purple-500 border-purple-500'
+                              : isDark
+                                ? 'border-gray-500 hover:border-gray-400'
+                                : 'border-gray-400 hover:border-gray-500',
+                          ]"
+                          @click="toggleAppliedBank(bank.id)"
+                        >
+                          <svg
+                            v-if="form.appliedBanks.includes(bank.id)"
+                            class="w-3 h-3 text-white"
+                            fill="currentColor"
+                            viewBox="0 0 20 20"
+                          >
+                            <path
+                              fill-rule="evenodd"
+                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                              clip-rule="evenodd"
+                            />
+                          </svg>
+                        </div>
+                      </div>
+                      <label
+                        :for="'applied-bank-' + bank.id"
+                        class="cursor-pointer flex-1"
+                        :class="isDark ? 'text-white' : 'text-gray-900'"
+                      >
+                        {{ bank.name }}
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- End Right Column -->
+          </div> <!-- End Grid -->
+
+          <!-- Additional Comments -->
+          <div>
+            <label
+              class="block text-sm font-medium mb-2"
               :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-            />
-            <Select
-              v-model="form.fundingTiming"
-              :options="fundingTimingOptions"
-              :class="[
-                isDark
-                  ? 'bg-gray-700 border-gray-600 text-white focus:border-purple-500'
-                  : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
-              ]"
-              class="w-full px-4 py-3 rounded-lg border transition-colors"
-              required
-            />
-          </div>
-
-          <!-- ¿Quieres comentar algo más acerca de tu solicitud? -->
-          <div class="space-y-2">
-            <InputLabel
-              :value="$t('creditApplication.additionalComments')"
-              :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-            />
-            <TextAreaInput
+            >
+              {{ $t('creditApplication.create.additionalComments') }}
+            </label>
+            <textarea
               v-model="form.additionalComments"
-              :class="[
+              rows="3"
+              class="w-full px-4 py-3 rounded-xl border transition-colors resize-none"
+              :class="
                 isDark
-                  ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
-                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
-              ]"
-              class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
-            />
+                  ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
+                  : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
+              "
+            ></textarea>
           </div>
-        </div>
+
+          <!-- Send Button -->
+          <div class="flex justify-end pt-6">
+            <button
+              type="button"
+              @click="submitForm"
+              :disabled="isLoading"
+              class="px-6 py-3 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              :class="
+                isDark
+                  ? 'bg-purple-600 hover:bg-purple-700 text-white'
+                  : 'bg-purple-600 hover:bg-purple-700 text-white'
+              "
+            >
+              <span v-if="isLoading" class="flex items-center justify-center">
+                <svg
+                  class="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    class="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    class="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                {{ $t('common.loading') }}
+              </span>
+              <span v-else>{{ $t("creditApplication.create.sendButton") }}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </AuthenticatedLayout>
 </template>
 
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, computed } from "vue";
 import { useDark } from "@vueuse/core";
 import { useI18n } from "vue-i18n";
-import InputLabel from "@/Components/InputLabel.vue";
-import TextInput from "@/Components/TextInput.vue";
-import TextAreaInput from "@/Components/TextAreaInput.vue";
-import NumericInput from "@/Components/NumericInput.vue";
-import Select from "@/Components/Select.vue";
-import MultiSelect from "@/Components/MultiSelect.vue";
 import { useApplicationStore } from "../stores/applicationStore";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 
 const { t } = useI18n();
 const isDark = useDark();
 const store = useApplicationStore();
+const isLoading = ref(false);
+const showCurrentBanks = ref(false);
+const showAppliedBanks = ref(false);
+
+// Spanish banks data
+const SPANISH_BANKS = [
+  { id: "santander", name: "Santander" },
+  { id: "bbva", name: "BBVA" },
+  { id: "sabadell", name: "Sabadell" },
+  { id: "caixabank", name: "CaixaBank" },
+  { id: "bankinter", name: "Bankinter" },
+  { id: "unicaja", name: "Unicaja" },
+  { id: "ibercaja", name: "Ibercaja" },
+  { id: "other", name: t('banks.other') },
+];
 
 // Form data
 const form = ref({
   financingType: "",
   amount: "",
+  gracePeriod: "",
   term: "",
-  purpose: "",
   hasGuarantees: "",
   currentBanks: [],
   hasAppliedWithBanks: "",
@@ -274,65 +547,125 @@ const form = ref({
   additionalComments: "",
 });
 
-// Options for select fields
-const financingTypeOptions = ref([
-  { value: "Línea de crédito", label: "Línea de crédito" },
-  { value: "Anticipo de caja", label: "Anticipo de caja" },
-  { value: "Confirming", label: "Confirming" },
-  { value: "Descuento comercial", label: "Descuento comercial" },
-  { value: "Préstamo a corto plazo", label: "Préstamo a corto plazo" },
-  { value: "Financiación export", label: "Financiación export" },
-  { value: "Financiación import", label: "Financiación import" },
-  { value: "Multilínea", label: "Multilínea" },
-  { value: "Préstamo largo plazo", label: "Préstamo largo plazo" },
-  { value: "Leasing", label: "Leasing" },
-  { value: "Renting", label: "Renting" },
-  { value: "Factoring", label: "Factoring" },
-  { value: "Anticipo facturas", label: "Anticipo facturas" },
-  { value: "Avales", label: "Avales" },
+// Get bank name by ID
+const getBankName = (bankId) => {
+  const bank = SPANISH_BANKS.find(b => b.id === bankId);
+  return bank ? bank.name : bankId;
+};
+
+// Toggle bank selection for current banks
+const toggleCurrentBank = (bankId) => {
+  const index = form.value.currentBanks.indexOf(bankId);
+  if (index === -1) {
+    form.value.currentBanks.push(bankId);
+  } else {
+    form.value.currentBanks.splice(index, 1);
+  }
+};
+
+// Remove current bank
+const removeCurrentBank = (bankId) => {
+  form.value.currentBanks = form.value.currentBanks.filter(id => id !== bankId);
+};
+
+// Toggle bank selection for applied banks
+const toggleAppliedBank = (bankId) => {
+  const index = form.value.appliedBanks.indexOf(bankId);
+  if (index === -1) {
+    form.value.appliedBanks.push(bankId);
+  } else {
+    form.value.appliedBanks.splice(index, 1);
+  }
+};
+
+// Remove applied bank
+const removeAppliedBank = (bankId) => {
+  form.value.appliedBanks = form.value.appliedBanks.filter(id => id !== bankId);
+};
+
+// Reactive options using computed properties
+const financingTypeOptions = computed(() => [
+  { value: "lineOfCredit", label: t('creditApplication.create.financingTypes.lineOfCredit') },
+  { value: "cashAdvance", label: t('creditApplication.create.financingTypes.cashAdvance') },
+  { value: "confirming", label: t('creditApplication.create.financingTypes.confirming') },
+  { value: "commercialDiscount", label: t('creditApplication.create.financingTypes.commercialDiscount') },
+  { value: "shortTermLoan", label: t('creditApplication.create.financingTypes.shortTermLoan') },
+  { value: "exportFinancing", label: t('creditApplication.create.financingTypes.exportFinancing') },
+  { value: "importFinancing", label: t('creditApplication.create.financingTypes.importFinancing') },
+  { value: "multiLine", label: t('creditApplication.create.financingTypes.multiLine') },
+  { value: "longTermLoan", label: t('creditApplication.create.financingTypes.longTermLoan') },
+  { value: "leasing", label: t('creditApplication.create.financingTypes.leasing') },
+  { value: "renting", label: t('creditApplication.create.financingTypes.renting') },
+  { value: "factoring", label: t('creditApplication.create.financingTypes.factoring') },
+  { value: "invoiceAdvance", label: t('creditApplication.create.financingTypes.invoiceAdvance') },
+  { value: "guarantees", label: t('creditApplication.create.financingTypes.guarantees') },
 ]);
 
-const termOptions = ref([
-  { value: "3 meses", label: "3 meses" },
-  { value: "6 meses", label: "6 meses" },
-  { value: "12 meses", label: "12 meses" },
-  { value: "18 meses", label: "18 meses" },
-  { value: "24 meses", label: "24 meses" },
-  { value: "36 meses", label: "36 meses" },
-  { value: "48 meses", label: "48 meses" },
-  { value: "60 meses", label: "60 meses" },
+const gracePeriodOptions = computed(() => [
+  { value: "3months", label: t('creditApplication.create.termOptions.3months') },
+  { value: "6months", label: t('creditApplication.create.termOptions.6months') },
+  { value: "12months", label: t('creditApplication.create.termOptions.12months') },
+  { value: "18months", label: t('creditApplication.create.termOptions.18months') },
+  { value: "24months", label: t('creditApplication.create.termOptions.24months') },
 ]);
 
-const yesNoOptions = ref([
-  { value: "Sí", label: "Sí" },
-  { value: "No", label: "No" },
+const termOptions = computed(() => [
+  { value: "12months", label: t('creditApplication.create.termOptions.12months') },
+  { value: "18months", label: t('creditApplication.create.termOptions.18months') },
+  { value: "24months", label: t('creditApplication.create.termOptions.24months') },
+  { value: "36months", label: t('creditApplication.create.termOptions.36months') },
+  { value: "48months", label: t('creditApplication.create.termOptions.48months') },
+  { value: "60months", label: t('creditApplication.create.termOptions.60months') },
 ]);
 
-const bankOptions = ref([
-  { value: "Santander", label: "Santander" },
-  { value: "BBVA", label: "BBVA" },
-  { value: "CaixaBank", label: "CaixaBank" },
-  { value: "Bankia", label: "Bankia" },
-  { value: "Sabadell", label: "Sabadell" },
-  { value: "Bankinter", label: "Bankinter" },
-  { value: "ING", label: "ING" },
-  { value: "Deutsche Bank", label: "Deutsche Bank" },
-  { value: "BNP Paribas", label: "BNP Paribas" },
-  { value: "Otro", label: "Otro" },
+const yesNoOptions = computed(() => [
+  { value: "yes", label: t('common.yes') },
+  { value: "no", label: t('common.no') },
 ]);
 
-const fundingTimingOptions = ref([
-  { value: "Inmediato", label: "Inmediato" },
-  { value: "1-2 semanas", label: "1-2 semanas" },
-  { value: "1 mes", label: "1 mes" },
-  { value: "2-3 meses", label: "2-3 meses" },
-  { value: "Más de 3 meses", label: "Más de 3 meses" },
+const fundingTimingOptions = computed(() => [
+  { value: "immediate", label: t('creditApplication.create.fundingTimingOptions.immediate') },
+  { value: "oneTwoWeeks", label: t('creditApplication.create.fundingTimingOptions.oneTwoWeeks') },
+  { value: "oneMonth", label: t('creditApplication.create.fundingTimingOptions.oneMonth') },
+  { value: "twoThreeMonths", label: t('creditApplication.create.fundingTimingOptions.twoThreeMonths') },
+  { value: "moreThanThreeMonths", label: t('creditApplication.create.fundingTimingOptions.moreThanThreeMonths') },
 ]);
+
+// Handle amount input formatting
+const handleAmountInput = (event) => {
+  let value = event.target.value.replace(/[^\d.]/g, '');
+  const decimalCount = value.split('.').length - 1;
+  if (decimalCount > 1) {
+    value = value.substring(0, value.lastIndexOf('.'));
+  }
+  form.value.amount = value;
+};
 
 // Handle change in hasAppliedWithBanks
 const handleAppliedWithBanksChange = () => {
-  if (form.value.hasAppliedWithBanks === "No") {
+  if (form.value.hasAppliedWithBanks === "no") {
     form.value.appliedBanks = [];
+  }
+};
+
+// Submit form
+const submitForm = async () => {
+  if (!form.value.financingType || !form.value.amount || !form.value.gracePeriod || 
+      !form.value.term || !form.value.hasGuarantees || !form.value.fundingTiming) {
+    alert(t('common.fillRequiredFields'));
+    return;
+  }
+
+  isLoading.value = true;
+  
+  try {
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1500));
+    console.log("Form submitted:", form.value);
+  } catch (error) {
+    console.error("Error submitting form:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 

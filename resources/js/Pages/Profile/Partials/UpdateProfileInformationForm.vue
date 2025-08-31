@@ -27,9 +27,9 @@ const form = useForm({
 </script>
 
 <template>
-  <section>
+  <section class="rounded-xl bg-white dark:bg-gray-800 p-6 shadow-md border border-gray-200 dark:border-gray-700 transition-all duration-300 ease-in-out">
     <header>
-      <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
+      <h2 class="text-lg font-semibold text-gray-800 dark:text-white">
         {{ $t("profile.profileInformation") }}
       </h2>
 
@@ -43,46 +43,46 @@ const form = useForm({
       class="mt-6 space-y-6"
     >
       <div>
-        <InputLabel for="name" value="Name" />
+        <InputLabel for="name" value="Name" class="text-gray-700 dark:text-gray-300"/>
 
         <TextInput
           id="name"
           type="text"
-          class="mt-1 block w-full"
+          class="mt-1 block w-full rounded-xl border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:ring-purple-500 shadow-sm transition-colors duration-200"
           v-model="form.name"
           required
           autofocus
           autocomplete="name"
         />
 
-        <InputError class="mt-2" :message="form.errors.name" />
+        <InputError class="mt-2 text-sm" :message="form.errors.name" />
       </div>
 
       <div>
-        <InputLabel for="email" value="Email" />
+        <InputLabel for="email" value="Email" class="text-gray-700 dark:text-gray-300"/>
 
         <TextInput
           id="email"
           type="email"
-          class="mt-1 block w-full"
+          class="mt-1 block w-full rounded-xl border-gray-300 dark:border-gray-600 focus:border-purple-500 focus:ring-purple-500 shadow-sm transition-colors duration-200"
           v-model="form.email"
           required
           autocomplete="username"
         />
 
-        <InputError class="mt-2" :message="form.errors.email" />
+        <InputError class="mt-2 text-sm" :message="form.errors.email" />
       </div>
 
-      <div v-if="mustVerifyEmail && user.email_verified_at === null">
-        <p class="text-sm mt-2 text-gray-800 dark:text-gray-200">
-          Your email address is unverified.
+      <div v-if="mustVerifyEmail && user.email_verified_at === null" class="rounded-xl bg-purple-50 dark:bg-purple-900/20 p-4">
+        <p class="text-sm text-gray-800 dark:text-gray-200">
+          {{ $t('profile.emailUnverified') }}
           <Link
             :href="route('verification.send')"
             method="post"
             as="button"
-            class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800"
+            class="underline text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors"
           >
-            Click here to re-send the verification email.
+            {{ $t('profile.resendVerification') }}
           </Link>
         </p>
 
@@ -90,24 +90,29 @@ const form = useForm({
           v-show="status === 'verification-link-sent'"
           class="mt-2 font-medium text-sm text-green-600 dark:text-green-400"
         >
-          A new verification link has been sent to your email address.
+          {{ $t('profile.verificationSent') }}
         </div>
       </div>
 
       <div class="flex items-center gap-4">
-        <PrimaryButton :disabled="form.processing">Save</PrimaryButton>
+        <PrimaryButton 
+          :disabled="form.processing"
+          class="rounded-xl bg-purple-600 dark:bg-purple-700 hover:bg-purple-700 dark:hover:bg-purple-800 focus:ring-purple-500 text-white transition-colors duration-200 px-4 py-2 shadow-sm hover:shadow-md"
+        >
+          {{ $t('profile.save') }}
+        </PrimaryButton>
 
         <Transition
-          enter-active-class="transition ease-in-out"
+          enter-active-class="transition ease-in-out duration-200"
           enter-from-class="opacity-0"
-          leave-active-class="transition ease-in-out"
+          leave-active-class="transition ease-in-out duration-200"
           leave-to-class="opacity-0"
         >
           <p
             v-if="form.recentlySuccessful"
             class="text-sm text-gray-600 dark:text-gray-400"
           >
-            Saved.
+            {{ $t('profile.saved') }}
           </p>
         </Transition>
       </div>

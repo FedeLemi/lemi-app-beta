@@ -17,7 +17,7 @@
               class="text-xl font-bold"
               :class="isDark ? 'text-white' : 'text-purple-900'"
             >
-              LEMI Finance
+              Lemi Finance
             </span>
           </div>
 
@@ -77,7 +77,7 @@
 
             <!-- <Link
               href="/account"
-              class="flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors"
+              class="flex items-center space-x-3 px-4 py-3 rounded-xl transition-colors"
               :class="
                 isDark
                   ? 'text-purple-200 hover:bg-purple-800'
@@ -149,7 +149,7 @@
               <select
                 v-model="currentLocale"
                 @change="changeLocale"
-                class="px-3 py-2 rounded-lg border text-sm"
+                class="px-3 py-2 rounded-xl border text-sm"
                 :class="
                   isDark
                     ? 'bg-gray-700 border-gray-600 text-white'

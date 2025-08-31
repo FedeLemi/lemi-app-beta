@@ -1,57 +1,22 @@
 <template>
   <AuthenticatedLayout
-    page-title="Información de la Empresa"
-    page-description="Complete los detalles de su empresa"
+    :page-title="t('companyInfo.title')"
+    :page-description="t('companyInfo.subtitle')"
   >
     <div class="max-w-6xl mx-auto">
-      <!-- Progress Bar -->
-      <!-- <div class="mb-8">
-        <div class="flex items-center justify-between mb-4">
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-          >
-            Paso 1 de 3
-          </span>
-          <span
-            class="text-sm font-medium"
-            :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-          >
-            33%
-          </span>
-        </div>
-        <div
-          class="w-full bg-gray-200 rounded-full h-2"
-          :class="isDark ? 'bg-gray-700' : 'bg-gray-200'"
-        >
-          <div
-            class="bg-purple-600 h-2 rounded-full transition-all duration-300 ease-in-out"
-            :style="{ width: '33%' }"
-          ></div>
-        </div>
-      </div> -->
-
       <!-- Step Content -->
       <div class="min-h-[600px]">
         <div class="max-w-4xl mx-auto">
           <div class="text-center mb-8">
-            <div
-              class="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-4"
-            >
-              <BuildingIcon class="w-8 h-8 text-white" />
-            </div>
+            <div></div>
             <h2
-              class="text-2xl font-bold"
+              class="text-2xl font-ligth"
               :class="isDark ? 'text-white' : 'text-gray-900'"
-            >
-              Información de la Empresa
-            </h2>
+            ></h2>
             <p
               class="text-sm mt-2"
               :class="isDark ? 'text-gray-300' : 'text-gray-600'"
-            >
-              Complete todos los campos requeridos para continuar
-            </p>
+            ></p>
           </div>
 
           <form @submit.prevent="handleSubmit" class="space-y-8">
@@ -61,17 +26,16 @@
                 <label
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-                >
-                  Nombre de la empresa *
+                >   {{ t('companyInfo.companyName') }} 
                 </label>
                 <input
-                  v-model="companyInfo.companyName"
+                  v-model="companyInfo.companyName" 
                   type="text"
-                  placeholder="Nombre oficial de la empresa"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  :placeholder="t('companyInfo.companyNamePlaceholder')"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="[
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-500 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
                     errors.companyName ? 'border-red-500' : '',
                   ]"
@@ -87,16 +51,16 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  NIF / CIF *
+                {{ t('companyInfo.nif') }}
                 </label>
                 <input
                   v-model="companyInfo.nif"
                   type="text"
-                  placeholder="Ej: B12345678"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  placeholder="B12345678"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="[
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
                     errors.nif ? 'border-red-500' : '',
                   ]"
@@ -115,16 +79,16 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Teléfono de contacto *
+                  {{ t('companyInfo.contactPhone') }}
                 </label>
                 <input
                   v-model="companyInfo.contactPhone"
                   type="tel"
-                  placeholder="Ej: 612345678"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  placeholder="61114444"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="[
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
                     errors.contactPhone ? 'border-red-500' : '',
                   ]"
@@ -140,16 +104,16 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Teléfono alternativo
+                {{ t('companyInfo.alternativePhone') }}
                 </label>
                 <input
                   v-model="companyInfo.alternativePhone"
                   type="tel"
-                  placeholder="Ej: 934567890"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  placeholder="61115555"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                   "
                 />
@@ -162,16 +126,16 @@
                 class="block text-sm font-medium mb-2"
                 :class="isDark ? 'text-gray-200' : 'text-gray-700'"
               >
-                Dirección *
+                {{ t('companyInfo.address') }}
               </label>
               <input
                 v-model="companyInfo.address"
                 type="text"
-                placeholder="Dirección completa"
-                class="w-full px-4 py-3 rounded-lg border transition-colors"
+                :placeholder="t('companyInfo.addressPlaceholder')"
+                class="w-full px-4 py-3 rounded-xl border transition-colors"
                 :class="[
                   isDark
-                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500',
                   errors.address ? 'border-red-500' : '',
                 ]"
@@ -189,14 +153,14 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Mes de inicio
+                {{ t('companyInfo.activityStartMonth') }}
                 </label>
                 <select
                   v-model="companyInfo.activityStartMonth"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500'
                   "
                 >
@@ -216,18 +180,18 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Año de inicio
+                {{ t('companyInfo.activityStartYear') }}
                 </label>
                 <input
                   v-model="companyInfo.activityStartYear"
                   type="number"
                   min="1900"
                   :max="new Date().getFullYear()"
-                  placeholder="Año"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  :placeholder="t('companyInfo.activityStartYear')"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                   "
                 />
@@ -238,17 +202,17 @@
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Cantidad de empleados
+                    {{ t('companyInfo.numberOfEmployees') }}
                 </label>
                 <input
                   v-model="companyInfo.numberOfEmployees"
                   type="number"
                   min="0"
-                  placeholder="Número de empleados"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                 :placeholder="t('companyInfo.numberOfEmployees')"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                   "
                 />
@@ -261,68 +225,49 @@
                 class="block text-sm font-medium mb-2"
                 :class="isDark ? 'text-gray-200' : 'text-gray-700'"
               >
-                Describe brevemente la actividad de tu empresa
+                {{ t('companyInfo.businessDescription') }}
               </label>
               <textarea
                 v-model="companyInfo.businessDescription"
-                rows="4"
-                placeholder="Actividad principal de la empresa..."
-                class="w-full px-4 py-3 rounded-lg border transition-colors resize-none"
+                rows="2"
+                :placeholder="t('companyInfo.businessDescription')"
+                class="w-full px-4 py-3 max-h-32 rounded-xl border transition-colors resize-none"
                 :class="
                   isDark
-                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
+                    ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-600 focus:border-purple-500'
                     : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
                 "
               ></textarea>
             </div>
 
-            <!-- Website and Revenue -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Profits Question and Annual Revenue -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <!-- Annual Revenue - Moved to left -->
               <div>
                 <label
                   class="block text-sm font-medium mb-2"
                   :class="isDark ? 'text-gray-200' : 'text-gray-700'"
                 >
-                  Página web
-                </label>
-                <input
-                  v-model="companyInfo.website"
-                  type="url"
-                  placeholder="https://example.com"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
-                  :class="
-                    isDark
-                      ? 'bg-gray-800 border-gray-600 text-white placeholder-gray-400 focus:border-purple-500'
-                      : 'bg-white border-gray-300 text-gray-900 placeholder-gray-500 focus:border-purple-500'
-                  "
-                />
-              </div>
-
-              <div>
-                <label
-                  class="block text-sm font-medium mb-2"
-                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-                >
-                  Facturación anual aproximada *
+                  {{ t('companyInfo.annualRevenue') }} *
                 </label>
                 <select
                   v-model="companyInfo.annualRevenue"
-                  class="w-full px-4 py-3 rounded-lg border transition-colors"
+                  class="w-full px-4 py-3 rounded-xl border transition-colors"
                   :class="[
                     isDark
-                      ? 'bg-gray-800 border-gray-600 text-white focus:border-purple-500'
+                      ? 'bg-gray-800 border-gray-600 text-gray-600 focus:border-purple-500'
                       : 'bg-white border-gray-300 text-gray-900 focus:border-purple-500',
                     errors.annualRevenue ? 'border-red-500' : '',
                   ]"
                   required
                 >
-                  <option value="">Seleccionar rango</option>
-                  <option value="0-50000">Menos de 50.000€</option>
-                  <option value="50000-100000">50.000€ - 100.000€</option>
-                  <option value="100000-250000">100.000€ - 250.000€</option>
-                  <option value="250000-500000">250.000€ - 500.000€</option>
-                  <option value="500000-1000000">500.000€ - 1.000.000€</option>
-                  <option value="1000000+">Más de 1.000.000€</option>
+                  <option value="">{{ t('companyInfo.selectRange') }}</option>
+                  <option value="0-50000">{{ t('companyInfo.revenueOptions.0-50000') }}</option>
+                  <option value="50000-100000">{{ t('companyInfo.revenueOptions.50000-100000') }}</option>
+                  <option value="100000-250000">{{ t('companyInfo.revenueOptions.100000-250000') }}</option>
+                  <option value="250000-500000">{{ t('companyInfo.revenueOptions.250000-500000') }}</option>
+                  <option value="500000-1000000">{{ t('companyInfo.revenueOptions.500000-1000000') }}</option>
+                  <option value="1000000+">{{ t('companyInfo.revenueOptions.1000000+') }}</option>
                 </select>
                 <p
                   v-if="errors.annualRevenue"
@@ -331,71 +276,58 @@
                   {{ errors.annualRevenue }}
                 </p>
               </div>
-            </div>
 
-            <!-- Profits Question -->
-            <div>
-              <label
-                class="block text-sm font-medium mb-3"
-                :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-              >
-                ¿Tu empresa ha presentado beneficios en los últimos 2 años? *
-              </label>
-              <div class="space-y-2">
-                <label class="flex items-center">
-                  <input
-                    v-model="companyInfo.hadProfitsLastTwoYears"
-                    type="radio"
-                    :value="true"
-                    class="w-4 h-4 text-purple-600 focus:ring-purple-500"
-                  />
-                  <span
-                    class="ml-2 text-sm"
-                    :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-                  >
-                    Sí
-                  </span>
+              <!-- Profits Question - Moved to right -->
+              <div>
+                <label
+                  class="block text-sm font-medium mb-3"
+                  :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                >
+                  {{ t('companyInfo.profitsQuestion') }} *
                 </label>
-                <label class="flex items-center">
-                  <input
-                    v-model="companyInfo.hadProfitsLastTwoYears"
-                    type="radio"
-                    :value="false"
-                    class="w-4 h-4 text-purple-600 focus:ring-purple-500"
-                  />
-                  <span
-                    class="ml-2 text-sm"
-                    :class="isDark ? 'text-gray-200' : 'text-gray-700'"
-                  >
-                    No
-                  </span>
-                </label>
+                <div class="space-y-2">
+                  <label class="flex items-center">
+                    <input
+                      v-model="companyInfo.hadProfitsLastTwoYears"
+                      type="radio"
+                      :value="true"
+                      class="w-4 h-4 text-purple-600 focus:ring-purple-500"
+                    />
+                    <span
+                      class="ml-2 text-sm"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      {{ t('common.yes') }}
+                    </span>
+                  </label>
+                  <label class="flex items-center">
+                    <input
+                      v-model="companyInfo.hadProfitsLastTwoYears"
+                      type="radio"
+                      :value="false"
+                      class="w-4 h-4 text-purple-600 focus:ring-purple-500"
+                    />
+                    <span
+                      class="ml-2 text-sm"
+                      :class="isDark ? 'text-gray-200' : 'text-gray-700'"
+                    >
+                      {{ t('common.no') }}
+                    </span>
+                  </label>
+                </div>
+                <p
+                  v-if="errors.hadProfitsLastTwoYears"
+                  class="text-red-500 text-sm mt-1"
+                >
+                  {{ errors.hadProfitsLastTwoYears }}
+                </p>
               </div>
-              <p
-                v-if="errors.hadProfitsLastTwoYears"
-                class="text-red-500 text-sm mt-1"
-              >
-                {{ errors.hadProfitsLastTwoYears }}
-              </p>
             </div>
-
-            <div class="flex justify-between pt-6">
-              <!-- <button
-                type="button"
-                class="px-6 py-3 rounded-lg font-medium transition-colors"
-                :class="
-                  isDark
-                    ? 'bg-gray-700 hover:bg-gray-600 text-gray-200'
-                    : 'bg-gray-200 hover:bg-gray-300 text-gray-700'
-                "
-              >
-                Volver
-              </button> -->
-
+            <div class="flex justify-end pt-6">
               <button
                 type="submit"
                 :disabled="isLoading"
-                class="px-6 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="px-6 py-3 rounded-xl font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 :class="
                   isDark
                     ? 'bg-purple-600 hover:bg-purple-700 text-white'
@@ -423,9 +355,9 @@
                       d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                     ></path>
                   </svg>
-                  Procesando...
+                  {{ t('common.loading') }}
                 </span>
-                <span v-else>Guardar</span>
+                <span v-else>{{ t('companyInfo.saveButton') }}</span>
               </button>
             </div>
           </form>
@@ -440,11 +372,12 @@ import { ref, reactive } from "vue";
 import { useDark } from "@vueuse/core";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout.vue";
 import { BuildingIcon } from "lucide-vue-next";
+import { useI18n } from "vue-i18n";
 
 const isDark = useDark();
 const isLoading = ref(false);
 const errors = reactive({});
-
+const { t } = useI18n();
 const companyInfo = reactive({
   companyName: "",
   nif: "",
